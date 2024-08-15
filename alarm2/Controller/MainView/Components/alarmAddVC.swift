@@ -10,6 +10,7 @@ import RealmSwift
 import AuthenticationServices
 
 class time {
+    // hh
     var hourSelect: Int?
     var minuteSelect: Int?
     var morningSelect: String?
@@ -174,5 +175,3 @@ class alarmAddVC: UIViewController {
 //        }
 //    }          //將選取的值放到 hour_select 變數和 minute_select變數
 //}
-
-// uhuh
