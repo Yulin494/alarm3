@@ -55,37 +55,7 @@ class alarmAddVC: UIViewController {
         let voiceVC = voiceVC()
         self.navigationController?.pushViewController(voiceVC, animated: true)
     }
-//    @IBAction func saveButton(_ sender: Any) {
-//        let realm = try! Realm()
-//        let selectDate = datePicker.date
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let formattedDate = dateFormatter.string(from: selectDate)
-//            
-//        print("Hour: \(String(describing: time.timeShared.hourSelect))")
-//        print("Minute: \(String(describing: time.timeShared.minuteSelect))")
-//        print("Morning: \(String(describing: time.timeShared.morningSelect))")
-//
-//        guard let hour = time.timeShared.hourSelect,
-//              let minute = time.timeShared.minuteSelect,
-//              let morning = time.timeShared.morningSelect
-//        else {
-//            print("Time selection is incomplete")
-//        return
-//            }
-//        let repeatDay = ""
-//        let UserMessage = ""
-//        let formattedTime = String(format: "%02d:%02d %@", hour, minute, morning)
-//
-//        let newAlarm = alarm(time: formattedTime, repeaT: repeatDay, message: UserMessage)
-//        try! realm.write{
-//            realm.add(newAlarm)
-//            }
-//
-//        //資料庫寫入後，儲存的arr也要一起append
-//        self.alarmArray.append(newAlarm)
-//        self.dismiss(animated: true, completion: nil)
-//    }
+
     @IBAction func saveButton(_ sender: Any) {
      
         let realm = try! Realm()
@@ -102,6 +72,8 @@ class alarmAddVC: UIViewController {
         let userMessage = "" // Replace with actual message logic
         let newAlarm = alarm(time: formattedDate, repeaT: repeatDay, message: userMessage)
         print(formattedDate)
+        print("fileURL : \(realm.configuration.fileURL!)")
+
         // Save the alarm to Realm
         try! realm.write {
             realm.add(newAlarm)
@@ -117,61 +89,8 @@ class alarmAddVC: UIViewController {
     }
     
     // MARK: - Function
-//    func datePickerChanged(datePicker:UIDatePicker) {
-//        // 設置要顯示在 UILabel 的日期時間格式
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-//
-//      更新 UILabel 的內容
-//        myLabel.text = formatter.stringFromDate(
-//          datePicker.date)
-//    }
+
 }
 // MARK: - Extensions
 
-//extension alarmAddVC : UIPickerViewDelegate,UIPickerViewDataSource{
-//
-//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-//        return 3   //    回傳行直列數
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//        if component == 0 {
-//            return time.timeShared.morning.count
-//        }else if component == 1{
-//            return time.timeShared.hour.count
-//        }else {
-//            return time.timeShared.minute.count
-//        }
-//    }
-//
-//    //回傳每一直列的行列數（component 指的是選到哪個直列）
-//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//        switch component {
-//        case 0:
-//            return time.timeShared.morning[row]
-//        case 1:
-//            return String(time.timeShared.hour[row])
-//        case 2:
-//            return String(time.timeShared.minute[row])
-//        default:
-//            return nil
-//        }
-//    }                 //顯示每一行列給的值（如果是個位數，前面補 0）
-//
-//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        switch component {
-//        case 0:
-//            time.timeShared.morningSelect = time.timeShared.morning[row]
-//            print(time.timeShared.morning[row])
-//        case 1:
-//            time.timeShared.hourSelect = time.timeShared.hour[row]
-//            print(time.timeShared.hour[row])
-//        case 2:
-//            time.timeShared.minuteSelect = time.timeShared.minute[row]
-//            print(time.timeShared.minute[row])
-//        default:
-//            break
-//        }
-//    }          //將選取的值放到 hour_select 變數和 minute_select變數
-//}
+
