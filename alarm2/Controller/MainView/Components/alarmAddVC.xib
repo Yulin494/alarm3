@@ -13,6 +13,7 @@
                 <outlet property="cancelButton" destination="nla-hn-x78" id="4AX-KV-sw2"/>
                 <outlet property="dateButton" destination="tps-8f-oIO" id="o2T-XN-UFb"/>
                 <outlet property="datePicker" destination="R9L-96-QI6" id="64r-ZZ-T3Y"/>
+                <outlet property="labelText" destination="ltj-GQ-prt" id="UYL-yQ-S8i"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="voiceButton" destination="tyV-SS-HHK" id="Bit-ZT-qoR"/>
             </connections>
@@ -79,12 +80,6 @@
                         <action selector="dateButton:" destination="-1" eventType="touchUpInside" id="SV3-op-5I0"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vn4-SQ-ZVW">
-                    <rect key="frame" x="267" y="383" width="81" height="29"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="鬧鐘 &gt;"/>
-                </button>
                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cSe-4m-n1j">
                     <rect key="frame" x="284" y="493" width="49" height="31"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -103,6 +98,15 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <locale key="locale" localeIdentifier="zh_TW"/>
                 </datePicker>
+                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ltj-GQ-prt">
+                    <rect key="frame" x="271" y="379" width="97" height="34"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="labelText:" destination="-1" eventType="editingDidEnd" id="g92-v2-IT9"/>
+                    </connections>
+                </textField>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>

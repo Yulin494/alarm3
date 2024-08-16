@@ -23,6 +23,7 @@ class time {
 
 class alarmAddVC: UIViewController {
     // MARk: - IBOutlet
+    @IBOutlet var labelText: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var cancelButton: UIBarButtonItem!
     @IBOutlet var dateButton: UIButton!
@@ -49,11 +50,15 @@ class alarmAddVC: UIViewController {
     }
     @IBAction func dateButton(_ sender: Any) {
         let repeatVC = repeatVC()
+        repeatVC.selectDays = dayValue.shared.select
         self.navigationController?.pushViewController(repeatVC, animated: true)
+        repeatVC.navigationController?.delegate = self
     }
     @IBAction func voiceButton(_ sender: Any) {
         let voiceVC = voiceVC()
+        voiceVC.selectVoice = voiceValue.shared.select
         self.navigationController?.pushViewController(voiceVC, animated: true)
+        voiceVC.navigationController?.delegate = self
     }
 
     @IBAction func saveButton(_ sender: Any) {
@@ -68,10 +73,11 @@ class alarmAddVC: UIViewController {
         let formattedDate = dateFormatter.string(from: selectedDate)
         
         // Create a new alarm instance
-        let repeatDay = "" // Replace with actual repeat logic
-        let userMessage = "" // Replace with actual message logic
+        let repeatDay = ""
+        let userMessage = ""
         let newAlarm = alarm(time: formattedDate, repeaT: repeatDay, message: userMessage)
         print(formattedDate)
+        
         print("fileURL : \(realm.configuration.fileURL!)")
 
         // Save the alarm to Realm
@@ -87,10 +93,44 @@ class alarmAddVC: UIViewController {
     
 
     }
+    @IBAction func labelText(_ sender: Any) {
+    }
     
     // MARK: - Function
 
 }
 // MARK: - Extensions
+extension alarmAddVC: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if viewController is alarmAddVC {
+            updateDateButtonTitle()
+            updateVoiceButtonTitle()
+        }
+    }
+    
+    func updateDateButtonTitle() {
+        let dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
+        let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
+        if selectedDayNames == [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] {
+            dateButton.setTitle("平日 >", for: .normal)
+        }else if selectedDayNames == ["Sunday","Saturday"] {
+            dateButton.setTitle("週末 >", for: .normal)
+        }else {
+            dateButton.setTitle(title, for: .normal)
+        }
+        //dateButton.setTitle(title, for: .normal)
+    }
+    func updateVoiceButtonTitle() {
+        //let voiceNames = ["A", "B", "C", "D", "E", "F", "G"]
+        let selectedVoiceNames = voiceValue.shared.select
+        let title = selectedVoiceNames
+        voiceButton.setTitle(title, for: .normal)
+    }
+//    func didSelectVoice(_ voice: String) {
+//        voiceValue.shared.select = voice
+//        updateVoiceButtonTitle()
+//        }
 
+}
 

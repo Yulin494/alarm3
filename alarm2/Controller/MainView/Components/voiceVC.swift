@@ -7,24 +7,33 @@
 
 import UIKit
 
+class voiceValue {
+    var select: String {
+            get {
+                return UserDefaults.standard.string(forKey: "selectedVoice") ?? "A"
+            }
+            set {
+                UserDefaults.standard.set(newValue, forKey: "selectedVoice")
+            }
+        }
+    static let shared = voiceValue()
+    private init() {}
+}
+
 class voiceVC: UIViewController {
     // MARk: - IBOutlet
     @IBOutlet var voiceView: UITableView!
     
     // MARK: - Proprtty
     var voice = ["A" , "B" , "C" , "D" , "E" , "F" , "G"]
-    var check = "A"
-    class voiceValue {
-        var select = "A"
-        static let shared = voiceValue()
-        private init() {}
-    }
+    var selectVoice = "A"
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        
+        selectVoice = voiceValue.shared.select
     }
     func setUI() {
         tableSet()
@@ -54,7 +63,7 @@ extension  voiceVC : UITableViewDelegate , UITableViewDataSource {
         cell.voiceLabel!.text = voice[indexPath.row]
     //這邊就是根據 day[indexPath.row] 的陣列內容印出鈴聲
     //這邊是利用 .accessoryType 的內建函式去幫有在被選擇到的天數印上打勾的樣式，在單例陣列裡的會被打勾，沒有的話就不會印出
-        if check == voice[indexPath.row] {
+        if selectVoice == voice[indexPath.row] {
             cell.accessoryType = .checkmark
         }
         else {
@@ -63,7 +72,7 @@ extension  voiceVC : UITableViewDelegate , UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        check = voice[indexPath.row]
+        selectVoice = voice[indexPath.row]
         voiceValue.shared.select = voice[indexPath.row]
         tableView.reloadData()
     }
