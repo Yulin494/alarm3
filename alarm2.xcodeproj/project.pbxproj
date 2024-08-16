@@ -17,6 +17,8 @@
 		7A5B62BE2C6B42A100DFC48F /* voiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5B62BC2C6B42A100DFC48F /* voiceTableViewCell.swift */; };
 		7A5B62BF2C6B42A100DFC48F /* voiceTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A5B62BD2C6B42A100DFC48F /* voiceTableViewCell.xib */; };
 		7A5D81D62C6C715800CB5E12 /* realmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5D81D52C6C715800CB5E12 /* realmModel.swift */; };
+		7A667F882C6F15D700C41906 /* labelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A667F862C6F15D700C41906 /* labelVC.swift */; };
+		7A667F892C6F15D700C41906 /* labelVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A667F872C6F15D700C41906 /* labelVC.xib */; };
 		7A66BFE72C63483600B8E47E /* clockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A66BFE52C63483600B8E47E /* clockTableViewCell.swift */; };
 		7A66BFE82C63483600B8E47E /* clockTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66BFE62C63483600B8E47E /* clockTableViewCell.xib */; };
 		7A731FB52C665B9300088FFD /* alarmAddVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A731FB32C665B9300088FFD /* alarmAddVC.swift */; };
@@ -42,6 +44,8 @@
 		7A5B62BC2C6B42A100DFC48F /* voiceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = voiceTableViewCell.swift; sourceTree = "<group>"; };
 		7A5B62BD2C6B42A100DFC48F /* voiceTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = voiceTableViewCell.xib; sourceTree = "<group>"; };
 		7A5D81D52C6C715800CB5E12 /* realmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmModel.swift; sourceTree = "<group>"; };
+		7A667F862C6F15D700C41906 /* labelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = labelVC.swift; sourceTree = "<group>"; };
+		7A667F872C6F15D700C41906 /* labelVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = labelVC.xib; sourceTree = "<group>"; };
 		7A66BFE52C63483600B8E47E /* clockTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = clockTableViewCell.swift; sourceTree = "<group>"; };
 		7A66BFE62C63483600B8E47E /* clockTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = clockTableViewCell.xib; sourceTree = "<group>"; };
 		7A731FB32C665B9300088FFD /* alarmAddVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = alarmAddVC.swift; sourceTree = "<group>"; };
@@ -128,6 +132,16 @@
 				7A66BFE62C63483600B8E47E /* clockTableViewCell.xib */,
 				7A731FB32C665B9300088FFD /* alarmAddVC.swift */,
 				7A731FB42C665B9300088FFD /* alarmAddVC.xib */,
+				7A69EC382C6F5FA20018639A /* alarmAdd */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		7A69EC382C6F5FA20018639A /* alarmAdd */ = {
+			isa = PBXGroup;
+			children = (
+				7A667F862C6F15D700C41906 /* labelVC.swift */,
+				7A667F872C6F15D700C41906 /* labelVC.xib */,
 				7A5B62B02C6B079E00DFC48F /* repeatTableViewCell.swift */,
 				7A5B62B12C6B079E00DFC48F /* repeatTableViewCell.xib */,
 				7A5B62B42C6B0DA300DFC48F /* repeatVC.swift */,
@@ -137,7 +151,7 @@
 				7A5B62BC2C6B42A100DFC48F /* voiceTableViewCell.swift */,
 				7A5B62BD2C6B42A100DFC48F /* voiceTableViewCell.xib */,
 			);
-			path = Components;
+			path = alarmAdd;
 			sourceTree = "<group>";
 		};
 		7A7384912C61F64100E7F4D7 = {
@@ -240,6 +254,7 @@
 				7A5B62BB2C6B428000DFC48F /* voiceVC.xib in Resources */,
 				7A66BFE82C63483600B8E47E /* clockTableViewCell.xib in Resources */,
 				7A5B62B72C6B0DA300DFC48F /* repeatVC.xib in Resources */,
+				7A667F892C6F15D700C41906 /* labelVC.xib in Resources */,
 				7A7384A72C61F64400E7F4D7 /* Assets.xcassets in Resources */,
 				7A5B62B32C6B079E00DFC48F /* repeatTableViewCell.xib in Resources */,
 			);
@@ -295,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A5B62B22C6B079E00DFC48F /* repeatTableViewCell.swift in Sources */,
+				7A667F882C6F15D700C41906 /* labelVC.swift in Sources */,
 				7A7384B32C61F69700E7F4D7 /* MainViewController.swift in Sources */,
 				7A5B62BA2C6B428000DFC48F /* voiceVC.swift in Sources */,
 				7A73849E2C61F64100E7F4D7 /* AppDelegate.swift in Sources */,

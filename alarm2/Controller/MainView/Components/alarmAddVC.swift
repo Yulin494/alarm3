@@ -10,7 +10,6 @@ import RealmSwift
 import AuthenticationServices
 
 class time {
-    // hh
     var hourSelect: Int?
     var minuteSelect: Int?
     var morningSelect: String?
@@ -31,15 +30,13 @@ class alarmAddVC: UIViewController {
     
     // MARK: - Proprtty
     var alarmArray: [alarm] = []
-    
+    var delegate: sendDateToDelgate!
+    var alarms: Results<alarm>!
+
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        //pickView.dataSource = self
-        //pickView.delegate = self
-        
     }
     
     // MARK: - UI Setting
@@ -69,10 +66,11 @@ class alarmAddVC: UIViewController {
         
         // Format the date
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let formattedDate = dateFormatter.string(from: selectedDate)
+        dateFormatter.locale = Locale(identifier: "zh_TW")
+        dateFormatter.timeStyle = .short
+        let formattedDate: String = dateFormatter.string(from: selectedDate)
         
-        // Create a new alarm instance
+        
         let repeatDay = ""
         let userMessage = ""
         let newAlarm = alarm(time: formattedDate, repeaT: repeatDay, message: userMessage)
@@ -88,7 +86,7 @@ class alarmAddVC: UIViewController {
         // Update the alarmArray if needed
         self.alarmArray.append(newAlarm)
         
-        // Dismiss the view controller
+        //delegate.sendDate(selectedDayNames: "selectedDayNames")
         self.dismiss(animated: true, completion: nil)
     
 
@@ -97,7 +95,7 @@ class alarmAddVC: UIViewController {
     }
     
     // MARK: - Function
-
+    
 }
 // MARK: - Extensions
 extension alarmAddVC: UINavigationControllerDelegate {
@@ -109,12 +107,12 @@ extension alarmAddVC: UINavigationControllerDelegate {
     }
     
     func updateDateButtonTitle() {
-        let dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        let dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
         let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
         let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
-        if selectedDayNames == [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] {
+        if selectedDayNames == [ "星期一" , "星期二" , "星期三" , "星期四" , "星期五" ] {
             dateButton.setTitle("平日 >", for: .normal)
-        }else if selectedDayNames == ["Sunday","Saturday"] {
+        }else if selectedDayNames == ["星期天","星期六"] {
             dateButton.setTitle("週末 >", for: .normal)
         }else {
             dateButton.setTitle(title, for: .normal)
@@ -133,4 +131,6 @@ extension alarmAddVC: UINavigationControllerDelegate {
 //        }
 
 }
-
+    @objc protocol sendDateToDelgate {
+        @objc func sendDate(selecteDate: String)
+}

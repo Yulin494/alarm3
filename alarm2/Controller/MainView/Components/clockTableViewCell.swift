@@ -9,6 +9,7 @@ import UIKit
 
 class clockTableViewCell: UITableViewCell {
 
+    @IBOutlet var setTime: UILabel!
     static let identifie = "clockTableViewCell"
     
     override func awakeFromNib() {

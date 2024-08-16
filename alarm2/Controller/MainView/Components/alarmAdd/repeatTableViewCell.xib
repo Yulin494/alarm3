@@ -16,9 +16,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oAG-WX-wbL">
-                        <rect key="frame" x="16" y="12" width="42" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oAG-WX-wbL">
+                        <rect key="frame" x="16" y="11.5" width="160" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -26,6 +25,11 @@
                 </subviews>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <constraints>
+                <constraint firstItem="oAG-WX-wbL" firstAttribute="leading" secondItem="njF-e1-oar" secondAttribute="leading" constant="16" id="18t-Rf-asn"/>
+                <constraint firstItem="oAG-WX-wbL" firstAttribute="width" secondItem="njF-e1-oar" secondAttribute="width" multiplier="0.5" id="9vf-fS-Wl2"/>
+                <constraint firstItem="oAG-WX-wbL" firstAttribute="centerY" secondItem="njF-e1-oar" secondAttribute="centerY" id="GrJ-UB-aWw"/>
+            </constraints>
             <connections>
                 <outlet property="dateLabel" destination="oAG-WX-wbL" id="4GT-sI-E6R"/>
             </connections>

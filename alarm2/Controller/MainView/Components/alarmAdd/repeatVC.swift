@@ -18,7 +18,7 @@ class repeatVC: UIViewController {
     @IBOutlet var dateView: UITableView!
     
     // MARK: - Proprtty
-    var day = ["Every Sonday" , "Every Monday" , "Every Tuesday" , "Every Wednesday" , "Every Thursday" , "Every Friday" , "Every Saturday"]
+    var day = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
     var selectDays: [Int] = []
     // MARK: - LifeCycle
     
