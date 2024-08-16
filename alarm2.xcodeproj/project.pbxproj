@@ -21,6 +21,8 @@
 		7A667F892C6F15D700C41906 /* labelVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A667F872C6F15D700C41906 /* labelVC.xib */; };
 		7A66BFE72C63483600B8E47E /* clockTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A66BFE52C63483600B8E47E /* clockTableViewCell.swift */; };
 		7A66BFE82C63483600B8E47E /* clockTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66BFE62C63483600B8E47E /* clockTableViewCell.xib */; };
+		7A69EC3B2C6F63270018639A /* alarmAddTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A69EC392C6F63270018639A /* alarmAddTableViewCell.swift */; };
+		7A69EC3C2C6F63270018639A /* alarmAddTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A69EC3A2C6F63270018639A /* alarmAddTableViewCell.xib */; };
 		7A731FB52C665B9300088FFD /* alarmAddVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A731FB32C665B9300088FFD /* alarmAddVC.swift */; };
 		7A731FB62C665B9300088FFD /* alarmAddVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A731FB42C665B9300088FFD /* alarmAddVC.xib */; };
 		7A73849E2C61F64100E7F4D7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A73849D2C61F64100E7F4D7 /* AppDelegate.swift */; };
@@ -48,6 +50,8 @@
 		7A667F872C6F15D700C41906 /* labelVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = labelVC.xib; sourceTree = "<group>"; };
 		7A66BFE52C63483600B8E47E /* clockTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = clockTableViewCell.swift; sourceTree = "<group>"; };
 		7A66BFE62C63483600B8E47E /* clockTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = clockTableViewCell.xib; sourceTree = "<group>"; };
+		7A69EC392C6F63270018639A /* alarmAddTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = alarmAddTableViewCell.swift; sourceTree = "<group>"; };
+		7A69EC3A2C6F63270018639A /* alarmAddTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = alarmAddTableViewCell.xib; sourceTree = "<group>"; };
 		7A731FB32C665B9300088FFD /* alarmAddVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = alarmAddVC.swift; sourceTree = "<group>"; };
 		7A731FB42C665B9300088FFD /* alarmAddVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = alarmAddVC.xib; sourceTree = "<group>"; };
 		7A73849A2C61F64100E7F4D7 /* alarm2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = alarm2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +136,8 @@
 				7A66BFE62C63483600B8E47E /* clockTableViewCell.xib */,
 				7A731FB32C665B9300088FFD /* alarmAddVC.swift */,
 				7A731FB42C665B9300088FFD /* alarmAddVC.xib */,
+				7A69EC392C6F63270018639A /* alarmAddTableViewCell.swift */,
+				7A69EC3A2C6F63270018639A /* alarmAddTableViewCell.xib */,
 				7A69EC382C6F5FA20018639A /* alarmAdd */,
 			);
 			path = Components;
@@ -253,6 +259,7 @@
 				7A7384B42C61F69700E7F4D7 /* MainViewController.xib in Resources */,
 				7A5B62BB2C6B428000DFC48F /* voiceVC.xib in Resources */,
 				7A66BFE82C63483600B8E47E /* clockTableViewCell.xib in Resources */,
+				7A69EC3C2C6F63270018639A /* alarmAddTableViewCell.xib in Resources */,
 				7A5B62B72C6B0DA300DFC48F /* repeatVC.xib in Resources */,
 				7A667F892C6F15D700C41906 /* labelVC.xib in Resources */,
 				7A7384A72C61F64400E7F4D7 /* Assets.xcassets in Resources */,
@@ -317,6 +324,7 @@
 				7A5B62BE2C6B42A100DFC48F /* voiceTableViewCell.swift in Sources */,
 				7A5B62B62C6B0DA300DFC48F /* repeatVC.swift in Sources */,
 				7A731FB52C665B9300088FFD /* alarmAddVC.swift in Sources */,
+				7A69EC3B2C6F63270018639A /* alarmAddTableViewCell.swift in Sources */,
 				7A7384B62C61FB2600E7F4D7 /* ViewController.swift in Sources */,
 				7A7384A02C61F64100E7F4D7 /* SceneDelegate.swift in Sources */,
 				7A5D81D62C6C715800CB5E12 /* realmModel.swift in Sources */,

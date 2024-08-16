@@ -22,6 +22,7 @@ class time {
 
 class alarmAddVC: UIViewController {
     // MARk: - IBOutlet
+    @IBOutlet var alarmSetView: UITableView!
     @IBOutlet var labelText: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var cancelButton: UIBarButtonItem!
@@ -32,11 +33,23 @@ class alarmAddVC: UIViewController {
     var alarmArray: [alarm] = []
     var delegate: sendDateToDelgate!
     var alarms: Results<alarm>!
-
+    var info = ["重複","標籤","提示聲","稍後提醒"]
+    var dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
+    }
+    func setUI() {
+        tableSet()
+    }
+    func tableSet() {
+        alarmSetView.register(UINib(nibName: "alarmAddTableViewCell", bundle: nil), forCellReuseIdentifier: alarmAddTableViewCell.identifie)
+        alarmSetView.dataSource = self
+        alarmSetView.delegate = self
+        
+        
     }
     
     // MARK: - UI Setting
@@ -107,7 +120,6 @@ extension alarmAddVC: UINavigationControllerDelegate {
     }
     
     func updateDateButtonTitle() {
-        let dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
         let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
         let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
         if selectedDayNames == [ "星期一" , "星期二" , "星期三" , "星期四" , "星期五" ] {
@@ -125,12 +137,54 @@ extension alarmAddVC: UINavigationControllerDelegate {
         let title = selectedVoiceNames
         voiceButton.setTitle(title, for: .normal)
     }
-//    func didSelectVoice(_ voice: String) {
-//        voiceValue.shared.select = voice
-//        updateVoiceButtonTitle()
-//        }
 
 }
     @objc protocol sendDateToDelgate {
         @objc func sendDate(selecteDate: String)
+}
+extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       let cell = alarmSetView.dequeueReusableCell(withIdentifier: alarmAddTableViewCell.identifie, for: indexPath) as! alarmAddTableViewCell
+        cell.alarmSetLabel.text = info[indexPath.row]
+        cell.pickDateLabel.text = title
+        print(title)
+        //cell.pickDateLabel.text = title
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 35
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return info.count
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectPage = info[indexPath.row]
+        switch selectPage {
+        case "重複":
+            let repeatVC = repeatVC()
+            repeatVC.delegate = self
+            repeatVC.selectDays = dayValue.shared.select
+            self.navigationController?.pushViewController(repeatVC, animated: true)
+            repeatVC.navigationController?.delegate = self
+        case "標籤":
+            let labelVC = labelVC()
+            self.navigationController?.pushViewController(labelVC, animated: true)
+            labelVC.navigationController?.delegate = self
+        case "提示聲":
+            let voiceVC = voiceVC()
+            voiceVC.selectVoice = voiceValue.shared.select
+            self.navigationController?.pushViewController(voiceVC, animated: true)
+            voiceVC.navigationController?.delegate = self
+        default:
+            return
+        }
+    }
+}
+extension alarmAddVC: RepeatVCDelegate {
+    func didSelectDays(_ selectedDays: [String]) {
+        let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
+        let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
+        
+    }
 }

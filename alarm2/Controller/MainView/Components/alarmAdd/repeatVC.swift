@@ -20,6 +20,7 @@ class repeatVC: UIViewController {
     // MARK: - Proprtty
     var day = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
     var selectDays: [Int] = []
+    var delegate: RepeatVCDelegate?
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -78,4 +79,7 @@ extension  repeatVC : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return day.count
     }                //需要印出的 Cell 數量
+}
+protocol RepeatVCDelegate: AnyObject {
+    func didSelectDays(_ selectedDays: [String])
 }
