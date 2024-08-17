@@ -26,8 +26,6 @@ class alarmAddVC: UIViewController {
     @IBOutlet var labelText: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var cancelButton: UIBarButtonItem!
-    @IBOutlet var dateButton: UIButton!
-    @IBOutlet var voiceButton: UIButton!
     
     // MARK: - Proprtty
     var alarmArray: [alarm] = []
@@ -49,7 +47,10 @@ class alarmAddVC: UIViewController {
         alarmSetView.dataSource = self
         alarmSetView.delegate = self
         
-        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        alarmSetView.reloadData()
     }
     
     // MARK: - UI Setting
@@ -58,19 +59,6 @@ class alarmAddVC: UIViewController {
     @IBAction func cancelButton(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-    @IBAction func dateButton(_ sender: Any) {
-        let repeatVC = repeatVC()
-        repeatVC.selectDays = dayValue.shared.select
-        self.navigationController?.pushViewController(repeatVC, animated: true)
-        repeatVC.navigationController?.delegate = self
-    }
-    @IBAction func voiceButton(_ sender: Any) {
-        let voiceVC = voiceVC()
-        voiceVC.selectVoice = voiceValue.shared.select
-        self.navigationController?.pushViewController(voiceVC, animated: true)
-        voiceVC.navigationController?.delegate = self
-    }
-
     @IBAction func saveButton(_ sender: Any) {
      
         let realm = try! Realm()
@@ -111,34 +99,6 @@ class alarmAddVC: UIViewController {
     
 }
 // MARK: - Extensions
-extension alarmAddVC: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        if viewController is alarmAddVC {
-            updateDateButtonTitle()
-            updateVoiceButtonTitle()
-        }
-    }
-    
-    func updateDateButtonTitle() {
-        let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
-        let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
-        if selectedDayNames == [ "星期一" , "星期二" , "星期三" , "星期四" , "星期五" ] {
-            dateButton.setTitle("平日 >", for: .normal)
-        }else if selectedDayNames == ["星期天","星期六"] {
-            dateButton.setTitle("週末 >", for: .normal)
-        }else {
-            dateButton.setTitle(title, for: .normal)
-        }
-        //dateButton.setTitle(title, for: .normal)
-    }
-    func updateVoiceButtonTitle() {
-        //let voiceNames = ["A", "B", "C", "D", "E", "F", "G"]
-        let selectedVoiceNames = voiceValue.shared.select
-        let title = selectedVoiceNames
-        voiceButton.setTitle(title, for: .normal)
-    }
-
-}
     @objc protocol sendDateToDelgate {
         @objc func sendDate(selecteDate: String)
 }
@@ -146,9 +106,29 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = alarmSetView.dequeueReusableCell(withIdentifier: alarmAddTableViewCell.identifie, for: indexPath) as! alarmAddTableViewCell
         cell.alarmSetLabel.text = info[indexPath.row]
-        cell.pickDateLabel.text = title
-        print(title)
-        //cell.pickDateLabel.text = title
+        if info[indexPath.row] == "重複" {
+            let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
+            var title = selectedDayNames.isEmpty ? "從不" : selectedDayNames.joined(separator: ", ")
+            if selectedDayNames == [ "星期一" , "星期二" , "星期三" , "星期四" , "星期五" ] {
+                title = "平日 >"
+                cell.pickDateLabel.text = title
+            }else if selectedDayNames == ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"] {
+                title = "每天 >"
+                cell.pickDateLabel.text = title
+            }else if selectedDayNames == ["星期天","星期六"] {
+                title = "週末 >"
+                cell.pickDateLabel.text = title
+            }else {
+                cell.pickDateLabel.text = title
+            }
+           
+        }else if info[indexPath.row] == "提示聲" {
+            let selectedVoiceNames = voiceValue.shared.select
+            var title = selectedVoiceNames
+            cell.pickDateLabel.text = title
+        }else {
+            cell.pickDateLabel.text = ""
+        }
         return cell
     }
     
@@ -166,19 +146,17 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             repeatVC.delegate = self
             repeatVC.selectDays = dayValue.shared.select
             self.navigationController?.pushViewController(repeatVC, animated: true)
-            repeatVC.navigationController?.delegate = self
         case "標籤":
             let labelVC = labelVC()
             self.navigationController?.pushViewController(labelVC, animated: true)
-            labelVC.navigationController?.delegate = self
         case "提示聲":
             let voiceVC = voiceVC()
             voiceVC.selectVoice = voiceValue.shared.select
             self.navigationController?.pushViewController(voiceVC, animated: true)
-            voiceVC.navigationController?.delegate = self
         default:
             return
         }
+
     }
 }
 extension alarmAddVC: RepeatVCDelegate {

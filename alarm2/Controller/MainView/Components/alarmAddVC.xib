@@ -12,10 +12,8 @@
             <connections>
                 <outlet property="alarmSetView" destination="Gi8-yS-yie" id="Wci-Kd-BbI"/>
                 <outlet property="cancelButton" destination="nla-hn-x78" id="4AX-KV-sw2"/>
-                <outlet property="dateButton" destination="tps-8f-oIO" id="o2T-XN-UFb"/>
                 <outlet property="datePicker" destination="R9L-96-QI6" id="64r-ZZ-T3Y"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
-                <outlet property="voiceButton" destination="tyV-SS-HHK" id="Bit-ZT-qoR"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -41,17 +39,6 @@
                         </navigationItem>
                     </items>
                 </navigationBar>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tps-8f-oIO">
-                    <rect key="frame" x="56" y="563" width="77" height="38"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="永不 &gt;">
-                        <fontDescription key="titleFontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="16"/>
-                    </buttonConfiguration>
-                    <connections>
-                        <action selector="dateButton:" destination="-1" eventType="touchUpInside" id="SV3-op-5I0"/>
-                    </connections>
-                </button>
                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="R9L-96-QI6">
                     <rect key="frame" x="0.0" y="145.5" width="414" height="162"/>
                     <locale key="locale" localeIdentifier="zh_TW"/>
@@ -60,15 +47,6 @@
                     <rect key="frame" x="20.5" y="315" width="373" height="195.5"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tyV-SS-HHK">
-                    <rect key="frame" x="281" y="567" width="81" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="鈴聲 &gt;"/>
-                    <connections>
-                        <action selector="voiceButton:" destination="-1" eventType="touchUpInside" id="eBW-ax-zSg"/>
-                    </connections>
-                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>

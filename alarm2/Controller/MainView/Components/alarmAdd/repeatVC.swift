@@ -71,6 +71,9 @@ extension  repeatVC : UITableViewDelegate , UITableViewDataSource {
             dayValue.shared.select.append(indexPath.row)
         }
         //遞減排序
+        // 當用戶選擇日期時
+        //dayValue.shared.select = selectedDays
+        //NotificationCenter.default.post(name: .daySelectionChanged, object: nil)
         dayValue.shared.select.sort(by: <)
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }

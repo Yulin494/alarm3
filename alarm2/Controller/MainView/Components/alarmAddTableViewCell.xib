@@ -23,7 +23,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="azw-bN-2sc">
-                        <rect key="frame" x="220" y="11.5" width="80" height="21"/>
+                        <rect key="frame" x="172" y="11.5" width="128" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -33,7 +33,7 @@
                     <constraint firstItem="azw-bN-2sc" firstAttribute="centerY" secondItem="lPq-Ys-OFW" secondAttribute="centerY" id="8ju-yW-7LP"/>
                     <constraint firstItem="azw-bN-2sc" firstAttribute="height" secondItem="lPq-Ys-OFW" secondAttribute="height" id="iej-SZ-E3B"/>
                     <constraint firstItem="azw-bN-2sc" firstAttribute="trailing" secondItem="lPq-Ys-OFW" secondAttribute="trailing" multiplier="1.7" constant="1" id="nOa-a3-pIk"/>
-                    <constraint firstItem="azw-bN-2sc" firstAttribute="width" secondItem="lPq-Ys-OFW" secondAttribute="width" multiplier="0.5" id="xCl-DV-7F0"/>
+                    <constraint firstItem="azw-bN-2sc" firstAttribute="width" secondItem="lPq-Ys-OFW" secondAttribute="width" multiplier="0.8" id="xCl-DV-7F0"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
