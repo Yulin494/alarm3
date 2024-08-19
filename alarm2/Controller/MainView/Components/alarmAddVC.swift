@@ -33,11 +33,17 @@ class alarmAddVC: UIViewController {
     var alarms: Results<alarm>!
     var info = ["重複","標籤","提示聲","稍後提醒"]
     var dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
+    private var initialDaySelect: [Int] = []
+    private var initialVoiceSelect: String = ""
+    let switchControl = UISwitch()
+
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        initialDaySelect = dayValue.shared.select
+        initialVoiceSelect = voiceValue.shared.select
     }
     func setUI() {
         tableSet()
@@ -58,6 +64,9 @@ class alarmAddVC: UIViewController {
     // MARK: - IBAction
     @IBAction func cancelButton(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+        //按下取消後再跳回變成預設的值，而不是已選擇的值
+        dayValue.shared.select = initialDaySelect
+        voiceValue.shared.select = initialVoiceSelect
     }
     @IBAction func saveButton(_ sender: Any) {
      
@@ -89,8 +98,8 @@ class alarmAddVC: UIViewController {
         
         //delegate.sendDate(selectedDayNames: "selectedDayNames")
         self.dismiss(animated: true, completion: nil)
-    
-
+        initialDaySelect = dayValue.shared.select
+        voiceValue.shared.select = initialVoiceSelect
     }
     @IBAction func labelText(_ sender: Any) {
     }
@@ -118,6 +127,9 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             }else if selectedDayNames == ["星期天","星期六"] {
                 title = "週末 >"
                 cell.pickDateLabel.text = title
+            }else if selectedDayNames == [] {
+                title = "從不 >"
+                cell.pickDateLabel.text = title
             }else {
                 cell.pickDateLabel.text = title
             }
@@ -126,6 +138,9 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             let selectedVoiceNames = voiceValue.shared.select
             var title = selectedVoiceNames
             cell.pickDateLabel.text = title
+        }else if info[indexPath.row] == "稍後提醒" {
+            //view.addSubview(switchControl)
+            //switchControl.frame = CGRect(x: 200, y: 200, width: 0, height: 0)
         }else {
             cell.pickDateLabel.text = ""
         }
@@ -156,7 +171,6 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
         default:
             return
         }
-
     }
 }
 extension alarmAddVC: RepeatVCDelegate {

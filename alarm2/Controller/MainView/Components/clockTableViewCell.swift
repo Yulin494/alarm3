@@ -10,6 +10,7 @@ import UIKit
 class clockTableViewCell: UITableViewCell {
 
     @IBOutlet var setTime: UILabel!
+    @IBOutlet var repeatDayAndMessage: UILabel!
     static let identifie = "clockTableViewCell"
     
     override func awakeFromNib() {

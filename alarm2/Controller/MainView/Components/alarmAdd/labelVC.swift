@@ -8,7 +8,8 @@
 import UIKit
 
 class labelVC: UIViewController {
-
+    @IBOutlet var messageTextfield: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

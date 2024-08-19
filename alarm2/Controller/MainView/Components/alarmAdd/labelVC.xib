@@ -10,6 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="labelVC" customModule="alarm2" customModuleProvider="target">
             <connections>
+                <outlet property="messageTextfield" destination="JWH-SA-sW7" id="Y8u-Qd-Oh8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,15 +19,19 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JWH-SA-sW7">
-                    <rect key="frame" x="159" y="242" width="97" height="34"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JWH-SA-sW7">
+                    <rect key="frame" x="20.5" y="436" width="373" height="34"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="JWH-SA-sW7" firstAttribute="width" secondItem="fnl-2z-Ty3" secondAttribute="width" multiplier="0.9" id="LeH-cr-xVE"/>
+                <constraint firstItem="JWH-SA-sW7" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="VkV-bW-kI0"/>
+                <constraint firstItem="JWH-SA-sW7" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" id="sMi-DP-H4V"/>
+            </constraints>
             <point key="canvasLocation" x="132" y="47"/>
         </view>
     </objects>

@@ -43,8 +43,8 @@
                     <rect key="frame" x="0.0" y="145.5" width="414" height="162"/>
                     <locale key="locale" localeIdentifier="zh_TW"/>
                 </datePicker>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Gi8-yS-yie">
-                    <rect key="frame" x="20.5" y="315" width="373" height="195.5"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Gi8-yS-yie">
+                    <rect key="frame" x="20.5" y="315" width="373" height="292.5"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
             </subviews>
@@ -56,7 +56,7 @@
                 <constraint firstItem="R9L-96-QI6" firstAttribute="height" secondItem="fnl-2z-Ty3" secondAttribute="height" multiplier="0.198044" id="Grl-5M-YJP"/>
                 <constraint firstItem="R9L-96-QI6" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="JJV-ce-3UD"/>
                 <constraint firstItem="Gi8-yS-yie" firstAttribute="centerX" secondItem="R9L-96-QI6" secondAttribute="centerX" id="g0y-Id-mPs"/>
-                <constraint firstItem="Gi8-yS-yie" firstAttribute="height" secondItem="R9L-96-QI6" secondAttribute="height" multiplier="1.2" constant="1" id="hUe-nt-GWm"/>
+                <constraint firstItem="Gi8-yS-yie" firstAttribute="height" secondItem="R9L-96-QI6" secondAttribute="height" multiplier="1.8" constant="1" id="hUe-nt-GWm"/>
                 <constraint firstItem="Gi8-yS-yie" firstAttribute="top" secondItem="R9L-96-QI6" secondAttribute="bottom" constant="7.5" id="j5h-X5-8L0"/>
                 <constraint firstItem="R9L-96-QI6" firstAttribute="width" secondItem="fnl-2z-Ty3" secondAttribute="width" id="ygS-4z-0q5"/>
             </constraints>
