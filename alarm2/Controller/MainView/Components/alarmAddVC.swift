@@ -177,6 +177,6 @@ extension alarmAddVC: RepeatVCDelegate {
     func didSelectDays(_ selectedDays: [String]) {
         let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
         let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
-        
     }
 }
+

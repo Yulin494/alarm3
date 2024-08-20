@@ -12,6 +12,7 @@ import UIKit
 class alarm: Object {
     //自動生成ＵＵＩＤ
     @objc dynamic var uuid: String = UUID().uuidString
+    
     @objc dynamic var time: String = ""
     @objc dynamic var repeaT: String = ""
     @objc dynamic var message: String = ""

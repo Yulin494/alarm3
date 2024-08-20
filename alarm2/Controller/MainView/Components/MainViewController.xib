@@ -10,7 +10,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainViewController" customModule="alarm2" customModuleProvider="target">
             <connections>
-                <outlet property="alarmAdd" destination="wYe-yQ-BSM" id="Ce8-xv-2ua"/>
                 <outlet property="tView" destination="Au6-u3-C3O" id="xzn-v3-UED"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,24 +19,20 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <navigationBar contentMode="scaleToFill" fixedFrame="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bui-YI-bWk">
-                    <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="100" estimatedSectionHeaderHeight="100" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Au6-u3-C3O">
+                    <rect key="frame" x="20.5" y="126" width="373" height="654"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+                <navigationBar hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translucent="NO" largeTitles="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bui-YI-bWk">
+                    <rect key="frame" x="0.0" y="59" width="414" height="44"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <items>
                         <navigationItem id="T7J-UY-hVk">
                             <barButtonItem key="leftBarButtonItem" title="編輯" id="ABI-VD-vkV"/>
-                            <barButtonItem key="rightBarButtonItem" title="＋" id="wYe-yQ-BSM">
-                                <connections>
-                                    <action selector="alarmAdd:" destination="-1" id="F5S-Ol-4Ow"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem key="rightBarButtonItem" title="＋" id="wYe-yQ-BSM"/>
                         </navigationItem>
                     </items>
                 </navigationBar>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Au6-u3-C3O">
-                    <rect key="frame" x="20.5" y="126" width="373" height="654"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>

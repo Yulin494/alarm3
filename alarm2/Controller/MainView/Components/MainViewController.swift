@@ -11,7 +11,7 @@ import RealmSwift
 class MainViewController: UIViewController {
     // MARk: - IBOutlet
     @IBOutlet var tView: UITableView!
-    @IBOutlet var alarmAdd: UIBarButtonItem!
+//    @IBOutlet var alarmAdd: UIBarButtonItem!
     
     // MARK: - Proprtty
     // 儲存從 Realm 查詢的鬧鐘資料
@@ -22,12 +22,15 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         setUI()
         loadAlarms()
-        tView.reloadData()
     }
+    // MARK: - UI Setting
+    
     func setUI() {
         tableSet()
+        setupNavigationBar()
     }
     func tableSet() {
         tView.register(UINib(nibName: "clockTableViewCell", bundle: nil), forCellReuseIdentifier: clockTableViewCell.identifie)
@@ -36,14 +39,22 @@ class MainViewController: UIViewController {
     }
     func loadAlarms() {
         let realm = try! Realm()
-        let alarms = realm.objects(alarm.self)
+        let alarms = realm.objects(alarm.self).sorted(byKeyPath: "time", ascending: true)
         alarmArray = Array(alarms)
+        tView.reloadData()
     }
-    // MARK: - UI Setting
-    
+    func setupNavigationBar() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        self.title = "鬧鐘"
+        let saveButton = UIBarButtonItem(title: "+", style: .plain , target: self, action: #selector(alarmAdd))
+        navigationItem.rightBarButtonItem = saveButton
+        let editButton = UIBarButtonItem(title: "編輯", style: .plain , target: self, action: #selector(alarmAdd))
+        navigationItem.leftBarButtonItem = editButton
+    }
     // MARK: - IBAction
     
-    @IBAction func alarmAdd(_ sender: Any) {
+    @objc func alarmAdd() {
         let alarmAddVC = alarmAddVC()
         //把跳轉過去的畫面設定為主畫面．這樣才可以使用接下來的跳轉畫面
         let navigationController = UINavigationController(rootViewController: alarmAddVC)
@@ -56,6 +67,7 @@ class MainViewController: UIViewController {
         dateFormatter.timeStyle = .short
         return dateFormatter.string(from: date)
     }
+
 }
 // MARK: - Extensions
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
@@ -64,8 +76,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         if indexPath.row < alarmArray.count {
             let alarm = alarmArray[indexPath.row]
             cell.setTime.text = alarm.time
-            cell.repeatDayAndMessage.text = alarm.message
-                //cell.repetitionLabel.text = alarm.repeaT
+            cell.repeatDayAndMessage.text = alarm.repeaT
+            //cell.repetitionLabel.text = alarm.repeaT
             }
         return cell
     }
@@ -102,8 +114,4 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
 
     }
 }
-//extension MainViewController: sendDateToDelgate{
-//    func sendDate(selectedDayNames dateSelect: String) {
-//        selectedDayNames = 1
-//    }
-//}
+
