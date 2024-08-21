@@ -12,6 +12,7 @@ class labelVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var messageTextfield: UITextField!
     
     // MARK: - Proprtty
+    //傳值步驟2 設定委任
     var delegate: MessageDelegate?
     var inputText: String?
     // MARK: - LifeCycle
@@ -19,20 +20,27 @@ class labelVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         messageTextfield.keyboardType = .default
-        messageTextfield.placeholder = "鬧鐘"
+        messageTextfield.text = "鬧鐘 >"
         messageTextfield.delegate = self
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // 在視圖出現時，設置 text field 成為第一響應者
         self.messageTextfield.becomeFirstResponder()
-        }
+    }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        delegate.didSendMessage(message)
+//    }
+    
     // MARK: - UI Setting
     
     // MARK: - IBAction
     @IBAction func inputText(_ sender: Any) {
-        inputText = messageTextfield.text
-        print(inputText ?? "")
+        if let message = messageTextfield.text {
+            //傳值步驟3 離開頁面做傳值
+            delegate?.didSendMessage(message)
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     // MARK: - Function
@@ -43,6 +51,7 @@ class labelVC: UIViewController, UITextFieldDelegate {
     }
 }
 // MARK: - Extensions
-protocol MessageDelegate {
+//傳值步驟1 宣告protocol func
+protocol MessageDelegate: AnyObject{
     func didSendMessage(_ message: String)
 }

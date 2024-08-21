@@ -33,9 +33,11 @@ class alarmAddVC: UIViewController {
     var alarms: Results<alarm>!
     var info = ["重複","標籤","提示聲","稍後提醒"]
     var dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
+    var daysNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"]
     private var initialDaySelect: [Int] = []
     private var initialVoiceSelect: String = ""
     let switchControl = UISwitch()
+    var userMessage: String = ""
 
     // MARK: - LifeCycle
     
@@ -52,6 +54,7 @@ class alarmAddVC: UIViewController {
         alarmSetView.register(UINib(nibName: "alarmAddTableViewCell", bundle: nil), forCellReuseIdentifier: alarmAddTableViewCell.identifie)
         alarmSetView.dataSource = self
         alarmSetView.delegate = self
+        
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -80,11 +83,25 @@ class alarmAddVC: UIViewController {
         dateFormatter.timeStyle = .short
         let formattedDate: String = dateFormatter.string(from: selectedDate)
         
+        let selectedDayIndices = dayValue.shared.select
+        let selectedDayNames = dayValue.shared.select.map { daysNames[$0] }
         
-        let repeatDay = ""
+        var repeatDay: String
+            if selectedDayIndices == [1, 2, 3, 4, 5] { // 星期一到五
+                repeatDay = "平日"
+            } else if selectedDayIndices == [0, 6] { // 星期六和日
+                repeatDay = "週末"
+            } else if selectedDayIndices == [0, 1, 2, 3, 4, 5, 6] { // 每天
+                repeatDay = "每天"
+            } else {
+                repeatDay = selectedDayNames.joined(separator: ", ")
+            }
+        
         let userMessage = ""
+        didSendMessage(userMessage)
         let newAlarm = alarm(time: formattedDate, repeaT: repeatDay, message: userMessage)
         print(formattedDate)
+        print(repeatDay)
         
         print("fileURL : \(realm.configuration.fileURL!)")
 
@@ -101,8 +118,12 @@ class alarmAddVC: UIViewController {
         initialDaySelect = dayValue.shared.select
         voiceValue.shared.select = initialVoiceSelect
     }
-    @IBAction func labelText(_ sender: Any) {
-    }
+//    @IBAction func labelText(_ sender: Any) {
+//        let labelVC = labelVC()
+//        labelVC.delegate = self
+//        self.navigationController?.pushViewController(labelVC, animated: true)
+//
+//    }
     
     // MARK: - Function
     
@@ -121,27 +142,32 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             if selectedDayNames == [ "星期一" , "星期二" , "星期三" , "星期四" , "星期五" ] {
                 title = "平日 >"
                 cell.pickDateLabel.text = title
-            }else if selectedDayNames == ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"] {
+            } else if selectedDayNames == ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"] {
                 title = "每天 >"
                 cell.pickDateLabel.text = title
-            }else if selectedDayNames == ["星期天","星期六"] {
+            } else if selectedDayNames == ["星期天","星期六"] {
                 title = "週末 >"
                 cell.pickDateLabel.text = title
-            }else if selectedDayNames == [] {
+            } else if selectedDayNames == [] {
                 title = "從不 >"
                 cell.pickDateLabel.text = title
-            }else {
+            } else {
                 cell.pickDateLabel.text = title
             }
            
-        }else if info[indexPath.row] == "提示聲" {
+        } else if info[indexPath.row] == "提示聲" {
             let selectedVoiceNames = voiceValue.shared.select
             var title = selectedVoiceNames
             cell.pickDateLabel.text = title
-        }else if info[indexPath.row] == "稍後提醒" {
+        } else if info[indexPath.row] == "稍後提醒" {
             //view.addSubview(switchControl)
             //switchControl.frame = CGRect(x: 200, y: 200, width: 0, height: 0)
-        }else {
+        } else if info[indexPath.row] == "標籤" {
+//            cell.pickDateLabel.text = "鬧鐘 >"
+            var messageTitle = userMessage.isEmpty ? "鬧鐘 >" : userMessage
+          //  var messageTitle = userMessage
+            cell.pickDateLabel.text = messageTitle
+        } else {
             cell.pickDateLabel.text = ""
         }
         return cell
@@ -163,6 +189,8 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             self.navigationController?.pushViewController(repeatVC, animated: true)
         case "標籤":
             let labelVC = labelVC()
+            //傳值步驟5 設定代理
+            labelVC.delegate = self
             self.navigationController?.pushViewController(labelVC, animated: true)
         case "提示聲":
             let voiceVC = voiceVC()
@@ -179,4 +207,13 @@ extension alarmAddVC: RepeatVCDelegate {
         let title = selectedDayNames.isEmpty ? "請選擇日期" : selectedDayNames.joined(separator: ", ")
     }
 }
-
+//傳值步驟4 在需要的地方做接值
+extension alarmAddVC: MessageDelegate {
+    func didSendMessage(_ message: String) {
+        // 在此處處理接收到的訊息
+        userMessage = message
+        print(userMessage)
+        // 刷新表格視圖
+        alarmSetView.reloadData()
+    }
+}

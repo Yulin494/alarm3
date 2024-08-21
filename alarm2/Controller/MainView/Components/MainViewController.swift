@@ -26,6 +26,14 @@ class MainViewController: UIViewController {
         setUI()
         loadAlarms()
     }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(true)
+//        tView.reloadData()
+//    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(true)
+//        tView.reloadData()
+//    }
     // MARK: - UI Setting
     
     func setUI() {
@@ -67,7 +75,14 @@ class MainViewController: UIViewController {
         dateFormatter.timeStyle = .short
         return dateFormatter.string(from: date)
     }
-
+    func didSendMessage(_ message: String) {
+            // 在此處處理接收到的訊息
+            print("接收到的訊息: \(message)")
+            
+            // 刷新表格視圖
+            alarmArray.forEach { $0.message = message }
+            tView.reloadData()
+    }
 }
 // MARK: - Extensions
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
@@ -114,4 +129,20 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
 
     }
 }
+// MainViewController.swift
+extension MainViewController: sendDateToDelgate {
+    func sendDate(selecteDate selectedDayNames: String) {
+        // 實現這個方法
+    }
+}
 
+// alarmAddVC.swift
+//extension MainViewController: MessageDelegate {
+//    func didSendMessage(_ message: String) {
+//        // 在此處處理接收到的訊息
+//        userMessage = message
+//
+//        // 刷新表格視圖
+//        alarmSetView.reloadData()
+//    }
+//}
