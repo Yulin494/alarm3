@@ -38,7 +38,7 @@ class alarmAddVC: UIViewController {
     private var initialVoiceSelect: String = ""
     let switchControl = UISwitch()
     var userMessage: String = ""
-
+    var messageTitle: String = ""
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -97,12 +97,14 @@ class alarmAddVC: UIViewController {
                 repeatDay = selectedDayNames.joined(separator: ", ")
             }
         
-        let userMessage = ""
-        didSendMessage(userMessage)
-        let newAlarm = alarm(time: formattedDate, repeaT: repeatDay, message: userMessage)
+        //let userMessage = userMessage
+        //didSendMessage(userMessage)
+        let newAlarm = alarm(time: formattedDate, repeaT: repeatDay,
+                             message: messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+)
         print(formattedDate)
         print(repeatDay)
-        
+        print(messageTitle)
         print("fileURL : \(realm.configuration.fileURL!)")
 
         // Save the alarm to Realm
@@ -164,7 +166,7 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             //switchControl.frame = CGRect(x: 200, y: 200, width: 0, height: 0)
         } else if info[indexPath.row] == "標籤" {
 //            cell.pickDateLabel.text = "鬧鐘 >"
-            var messageTitle = userMessage.isEmpty ? "鬧鐘 >" : userMessage
+             messageTitle = userMessage.isEmpty ? "鬧鐘 >" : userMessage
           //  var messageTitle = userMessage
             cell.pickDateLabel.text = messageTitle
         } else {
