@@ -12,8 +12,8 @@ import UIKit
 class alarm: Object {
     //自動生成ＵＵＩＤ
     @objc dynamic var uuid: String = UUID().uuidString
-    
-    @objc dynamic var time: String = ""
+    @objc dynamic var morning: String = ""
+    @objc dynamic var time: Date = Date()
     @objc dynamic var repeaT: String = ""
     @objc dynamic var message: String = ""
         
@@ -22,8 +22,9 @@ class alarm: Object {
         return "uuid"
     }
     
-    convenience init(time: String, repeaT: String, message: String) {
+    convenience init(morning: String, time: Date, repeaT: String, message: String) {
        self.init()
+        self.morning = morning
        self.time = time
        self.repeaT = repeaT
         self.message = message

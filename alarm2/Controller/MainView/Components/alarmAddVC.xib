@@ -12,7 +12,7 @@
             <connections>
                 <outlet property="alarmSetView" destination="Gi8-yS-yie" id="Wci-Kd-BbI"/>
                 <outlet property="datePicker" destination="R9L-96-QI6" id="64r-ZZ-T3Y"/>
-                <outlet property="delteButton" destination="PUY-ki-oKv" id="SeQ-pn-82b"/>
+                <outlet property="deleteButton" destination="PUY-ki-oKv" id="SeQ-pn-82b"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -45,7 +45,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="delete:" destination="-1" eventType="touchUpInside" id="CjJ-8f-gWN"/>
+                        <action selector="deleteBTN:" destination="-1" eventType="touchUpInside" id="SvZ-Jf-wTE"/>
                     </connections>
                 </button>
             </subviews>

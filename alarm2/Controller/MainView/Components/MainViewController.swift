@@ -41,11 +41,16 @@ class MainViewController: UIViewController {
         
     }
     func loadAlarms() {
-        let realm = try! Realm()
-        let alarms = realm.objects(alarm.self).sorted(byKeyPath: "time", ascending: true)
-        alarmArray = Array(alarms)
-        tView.reloadData()
+        do {
+            let realm = try Realm()
+            let alarms = realm.objects(alarm.self).sorted(byKeyPath: "time", ascending: true)
+            alarmArray = Array(alarms)
+            tView.reloadData()
+        } catch {
+            print("Failed to initialize Realm: \(error.localizedDescription)")
+        }
     }
+
     func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
@@ -81,6 +86,10 @@ class MainViewController: UIViewController {
             alarmArray.forEach { $0.message = message }
             tView.reloadData()
     }
+//    func formatAlarmTime(alarm: alarm) -> String {
+//        return "\(alarm.morning) \(alarm.time)"
+//    }
+
 }
 // MARK: - Extensions
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
@@ -88,7 +97,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
        let cell = tView.dequeueReusableCell(withIdentifier: clockTableViewCell.identifie, for: indexPath) as! clockTableViewCell
         if indexPath.row < alarmArray.count {
             let alarm = alarmArray[indexPath.row]
-            cell.setTime.text = alarm.time
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "#zh_TW")
+            dateFormatter.dateFormat = " h:mm"
+            cell.morning.text = alarm.morning
+            cell.setTime.text = dateFormatter.string(from: alarm.time)
             cell.repeatDayAndMessage.text = alarm.repeaT
             //cell.repetitionLabel.text = alarm.repeaT
             }
@@ -111,14 +124,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
                     try realm.write {
                         realm.delete(deleteArrayCell)
                     }
+                self.alarmArray.remove(at: indexPath.row)
+                self.tView.deleteRows(at: [indexPath], with: .automatic)
+                completionHandler(true)
                 }catch {
                     print("刪除鬧鐘時發生錯誤：\(error)")
                     completionHandler(false)
                 }
-                self.alarmArray.remove(at: indexPath.row)
-                self.tView.deleteRows(at: [indexPath], with: .automatic)
-                completionHandler(true)
-            }else {
+            } else {
                 completionHandler(false)
             }
         }
@@ -164,5 +177,11 @@ extension MainViewController: MessageDelegateFromAlarmaddVC {
         // 刷新表格視圖
         //tView.reloadData()
         loadAlarms()
+    }
+    func didDeleteAlarm(_ alarm: alarm) {
+        if let index = alarmArray.firstIndex(where: { $0.uuid == alarm.uuid }) {
+            alarmArray.remove(at: index)
+            tView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        }
     }
 }

@@ -9,6 +9,7 @@ import UIKit
 
 class clockTableViewCell: UITableViewCell {
 
+    @IBOutlet var morning: UILabel!
     @IBOutlet var setTime: UILabel!
     @IBOutlet var repeatDayAndMessage: UILabel!
     static let identifie = "clockTableViewCell"

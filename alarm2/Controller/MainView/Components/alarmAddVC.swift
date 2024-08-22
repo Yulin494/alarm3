@@ -25,7 +25,7 @@ class alarmAddVC: UIViewController {
     @IBOutlet var alarmSetView: UITableView!
     @IBOutlet var labelText: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
-    @IBOutlet var delteButton: UIButton!
+    @IBOutlet var deleteButton: UIButton!
     
     // MARK: - Proprtty
     var alarmArray: [alarm] = []
@@ -52,20 +52,12 @@ class alarmAddVC: UIViewController {
         initialVoiceSelect = voiceValue.shared.select
         
         if isEditMode {
-            let alarm = editingAlarm
-        // 設置 UI 元素的初始值
-            //datePicker.date = stringToDate(alarm.time)
-            //messageTitle = alarm.message
-            //dayValue.shared.select = getDayIndices(from: alarm.repeaT)
-                
-            // 更新標題
-            self.title = "編輯鬧鐘"
-        } else {
-            self.title = "新增鬧鐘"
-            delteButton.isHidden = true
-
-        }
-    }
+                    configureForEditing()
+                } else {
+                    self.title = "新增鬧鐘"
+                    deleteButton.isHidden = true
+                }
+            }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         alarmSetView.reloadData()
@@ -104,12 +96,12 @@ class alarmAddVC: UIViewController {
         let realm = try! Realm()
         
         let selectedDate = datePicker.date
-        
-        // Format the date
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "zh_TW")
-        dateFormatter.timeStyle = .short
-        let formattedDate: String = dateFormatter.string(from: selectedDate)
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: selectedDate)
+        let minute = calendar.component(.minute, from: selectedDate)
+        let period = hour >= 12 ? "下午" : "上午"
+        let formattedHour = hour % 12 == 0 ? 12 : hour % 12
+        let formattedTime = String(format: "%02d:%02d", formattedHour, minute)
         
         let selectedDayIndices = dayValue.shared.select
         let selectedDayNames = dayValue.shared.select.map { daysNames[$0] }
@@ -121,59 +113,121 @@ class alarmAddVC: UIViewController {
                 repeatDay = "週末"
             } else if selectedDayIndices == [0, 1, 2, 3, 4, 5, 6] { // 每天
                 repeatDay = "每天"
+            } else if selectedDayIndices == [] { // 每天
+                repeatDay = "從不"
             } else {
                 repeatDay = selectedDayNames.joined(separator: ", ")
             }
         
         
-        let newAlarm = alarm(time: formattedDate, repeaT: repeatDay,
+        let newAlarm = alarm(morning: period, time: selectedDate, repeaT: repeatDay,
                              message: messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
 )
-        print(formattedDate)
+        print(period)
+        print(formattedTime)
         print(repeatDay)
         print(messageTitle)
         print("fileURL : \(realm.configuration.fileURL!)")
 
-        // Save the alarm to Realm
-        try! realm.write {
-            realm.add(newAlarm)
-        }
-        
-        // Update the alarmArray if needed
-        self.alarmArray.append(newAlarm)
-        
-        //delegate.sendDate(selectedDayNames: "selectedDayNames")
-        self.dismiss(animated: true, completion: nil)
-        //調用delegate傳值
+        do {
+            try realm.write {
+                if isEditMode, let alarmToEdit = editingAlarm {
+                    alarmToEdit.morning = period
+                    alarmToEdit.time = selectedDate
+                    alarmToEdit.repeaT = repeatDay
+                    alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+                } else {
+                    realm.add(newAlarm)
+                }
+            }
+        } catch {
+                    print("儲存鬧鐘時發生錯誤：\(error)")
+                }
+        if !isEditMode {
+                    alarmArray.append(newAlarm)
+                }
+                
+                // 調用 delegate 傳值
         self.delegate?.didSendMessageFromAlarmaddVC(self.messageTitle)
-        initialDaySelect = dayValue.shared.select
-        voiceValue.shared.select = initialVoiceSelect
-        if isEditMode, let alarmToEdit = editingAlarm {  // 使用 isEditingMode
-            try! realm.write {
-                alarmToEdit.time = formattedDate
-                alarmToEdit.repeaT = repeatDay
-                alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+                self.dismiss(animated: true, completion: nil)
             }
-        } else {
-            let newAlarm = alarm(time: formattedDate, repeaT: repeatDay,
-                                 message: messageTitle.isEmpty ? "鬧鐘 >" : messageTitle)
-            try! realm.write {
-                realm.add(newAlarm)
-            }
-        }
-    }
-    @IBAction func deletee(_ sender: Any) {
-//        let realm = try! Realm()
-//        try realm.write {
-//            realm.delete(deleteArrayCell)
+        // Save the alarm to Realm
+//        try! realm.write {
+//            realm.add(newAlarm)
 //        }
-//        self.alarmArray.remove(at: indexPath.row)
-        self.dismiss(animated: true, completion: nil)
+//
+//        // Update the alarmArray if needed
+//        self.alarmArray.append(newAlarm)
+//
+//        //delegate.sendDate(selectedDayNames: "selectedDayNames")
+//        self.dismiss(animated: true, completion: nil)
+//        //調用delegate傳值
+//        self.delegate?.didSendMessageFromAlarmaddVC(self.messageTitle)
+//        initialDaySelect = dayValue.shared.select
+//        voiceValue.shared.select = initialVoiceSelect
+//        if isEditMode, let alarmToEdit = editingAlarm {
+//                try! realm.write {
+//                    alarmToEdit.time = formattedDate
+//                    alarmToEdit.repeaT = repeatDay
+//                    alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+//                }
+//            } else {
+//                let newAlarm = alarm()
+//                newAlarm.uuid = UUID().uuidString
+//                newAlarm.time = formattedDate
+//                newAlarm.repeaT = repeatDay
+//                newAlarm.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+//
+//                try! realm.write {
+//                    realm.add(newAlarm)
+//                }
+//            }
+//    }
+    @IBAction func deleteBTN(_ sender: Any) {
+        guard let alarmToDelete = editingAlarm, !alarmToDelete.isInvalidated else { return }
+
+                let realm = try! Realm()
+                do {
+                    try realm.write {
+                        realm.delete(alarmToDelete)
+                    }
+                    // 通知代理鬧鐘已被刪除
+                    delegate?.didDeleteAlarm(alarmToDelete)
+                    // 關閉當前視圖控制器
+                    self.dismiss(animated: true, completion: nil)
+                } catch {
+                    print("刪除鬧鐘時發生錯誤：\(error)")
+                }
     }
     
     
     // MARK: - Function
-    
+    func configureForEditing() {
+            guard let alarm = editingAlarm else { return }
+            // 設置 UI 元素的初始值
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm"
+            let formattedTime = dateFormatter.string(from: alarm.time)
+            datePicker.date = alarm.time
+            messageTitle = alarm.message
+            dayValue.shared.select = getDayIndices(from: alarm.repeaT)
+            self.title = "編輯鬧鐘"
+            deleteButton.isHidden = false
+        }
+    func getDayIndices(from repeatString: String) -> [Int] {
+            switch repeatString {
+            case "平日":
+                return [1, 2, 3, 4, 5]
+            case "週末":
+                return [0, 6]
+            case "每天":
+                return [0, 1, 2, 3, 4, 5, 6]
+            case "從不":
+                return []
+            default:
+                return dayNames.indices.filter { dayNames[$0] == repeatString }
+            }
+        }
 }
 // MARK: - Extensions
     @objc protocol sendDateToDelgate {
@@ -264,4 +318,5 @@ extension alarmAddVC: MessageDelegate {
 }
 protocol MessageDelegateFromAlarmaddVC {
     func didSendMessageFromAlarmaddVC(_ message: String)
+    func didDeleteAlarm(_ alarm: alarm)
 }

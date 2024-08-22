@@ -6,16 +6,36 @@
 //
 
 import UIKit
-
+import RealmSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        return true
+        // 配置 Realm 的遷移
+                let config = Realm.Configuration(
+                    schemaVersion: 1, // 更新此版本號以進行遷移
+                    migrationBlock: { migration, oldSchemaVersion in
+                        // 如果需要手動遷移，可以在這裡處理
+                        // 在這裡可以留空來使用自動遷移
+                        if oldSchemaVersion < 1 {
+                            // 自動遷移會處理大部分簡單的變更
+                        }
+                    }
+                )
+                
+                // 設置 Realm 的配置
+                Realm.Configuration.defaultConfiguration = config
+                return true
     }
+    func clearRealm() {
+        let realm = try! Realm()
+        try! realm.write {
+            realm.deleteAll()
+        }
+    }
+
 
     // MARK: UISceneSession Lifecycle
 
