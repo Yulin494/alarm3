@@ -25,11 +25,11 @@ class alarmAddVC: UIViewController {
     @IBOutlet var alarmSetView: UITableView!
     @IBOutlet var labelText: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
-    @IBOutlet var cancelButton: UIBarButtonItem!
+    @IBOutlet var delteButton: UIButton!
     
     // MARK: - Proprtty
     var alarmArray: [alarm] = []
-    var delegate: sendDateToDelgate!
+   // var delegate: sendDateToDelgate!
     var alarms: Results<alarm>!
     var info = ["重複","標籤","提示聲","稍後提醒"]
     var dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
@@ -39,14 +39,43 @@ class alarmAddVC: UIViewController {
     let switchControl = UISwitch()
     var userMessage: String = ""
     var messageTitle: String = ""
+    var delegate: MessageDelegateFromAlarmaddVC?
+    var editingAlarm: alarm?
+    var isEditMode: Bool = false
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        setupNavigationBar()
         initialDaySelect = dayValue.shared.select
         initialVoiceSelect = voiceValue.shared.select
+        
+        if isEditMode {
+            let alarm = editingAlarm
+        // 設置 UI 元素的初始值
+            //datePicker.date = stringToDate(alarm.time)
+            //messageTitle = alarm.message
+            //dayValue.shared.select = getDayIndices(from: alarm.repeaT)
+                
+            // 更新標題
+            self.title = "編輯鬧鐘"
+        } else {
+            self.title = "新增鬧鐘"
+            delteButton.isHidden = true
+
+        }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        alarmSetView.reloadData()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.didSendMessageFromAlarmaddVC(messageTitle)
+    }
+    
+    // MARK: - UI Setting
     func setUI() {
         tableSet()
     }
@@ -54,24 +83,23 @@ class alarmAddVC: UIViewController {
         alarmSetView.register(UINib(nibName: "alarmAddTableViewCell", bundle: nil), forCellReuseIdentifier: alarmAddTableViewCell.identifie)
         alarmSetView.dataSource = self
         alarmSetView.delegate = self
-        
-        
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        alarmSetView.reloadData()
+    func setupNavigationBar() {
+        let saveButton = UIBarButtonItem(title: "儲存", style: .plain , target: self, action: #selector(save))
+        let cancelButton = UIBarButtonItem(title: "取消", style: .plain , target: self, action: #selector(cancel))
+        navigationItem.leftBarButtonItem = cancelButton
+        navigationItem.rightBarButtonItem = saveButton
+
     }
-    
-    // MARK: - UI Setting
-    
     // MARK: - IBAction
-    @IBAction func cancelButton(_ sender: Any) {
+
+    @objc func cancel(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
         //按下取消後再跳回變成預設的值，而不是已選擇的值
         dayValue.shared.select = initialDaySelect
         voiceValue.shared.select = initialVoiceSelect
     }
-    @IBAction func saveButton(_ sender: Any) {
+    @objc func save(_ sender: Any) {
      
         let realm = try! Realm()
         
@@ -97,8 +125,7 @@ class alarmAddVC: UIViewController {
                 repeatDay = selectedDayNames.joined(separator: ", ")
             }
         
-        //let userMessage = userMessage
-        //didSendMessage(userMessage)
+        
         let newAlarm = alarm(time: formattedDate, repeaT: repeatDay,
                              message: messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
 )
@@ -117,15 +144,33 @@ class alarmAddVC: UIViewController {
         
         //delegate.sendDate(selectedDayNames: "selectedDayNames")
         self.dismiss(animated: true, completion: nil)
+        //調用delegate傳值
+        self.delegate?.didSendMessageFromAlarmaddVC(self.messageTitle)
         initialDaySelect = dayValue.shared.select
         voiceValue.shared.select = initialVoiceSelect
+        if isEditMode, let alarmToEdit = editingAlarm {  // 使用 isEditingMode
+            try! realm.write {
+                alarmToEdit.time = formattedDate
+                alarmToEdit.repeaT = repeatDay
+                alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+            }
+        } else {
+            let newAlarm = alarm(time: formattedDate, repeaT: repeatDay,
+                                 message: messageTitle.isEmpty ? "鬧鐘 >" : messageTitle)
+            try! realm.write {
+                realm.add(newAlarm)
+            }
+        }
     }
-//    @IBAction func labelText(_ sender: Any) {
-//        let labelVC = labelVC()
-//        labelVC.delegate = self
-//        self.navigationController?.pushViewController(labelVC, animated: true)
-//
-//    }
+    @IBAction func deletee(_ sender: Any) {
+//        let realm = try! Realm()
+//        try realm.write {
+//            realm.delete(deleteArrayCell)
+//        }
+//        self.alarmArray.remove(at: indexPath.row)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     
     // MARK: - Function
     
@@ -165,9 +210,7 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
             //view.addSubview(switchControl)
             //switchControl.frame = CGRect(x: 200, y: 200, width: 0, height: 0)
         } else if info[indexPath.row] == "標籤" {
-//            cell.pickDateLabel.text = "鬧鐘 >"
              messageTitle = userMessage.isEmpty ? "鬧鐘 >" : userMessage
-          //  var messageTitle = userMessage
             cell.pickDateLabel.text = messageTitle
         } else {
             cell.pickDateLabel.text = ""
@@ -218,4 +261,7 @@ extension alarmAddVC: MessageDelegate {
         // 刷新表格視圖
         alarmSetView.reloadData()
     }
+}
+protocol MessageDelegateFromAlarmaddVC {
+    func didSendMessageFromAlarmaddVC(_ message: String)
 }

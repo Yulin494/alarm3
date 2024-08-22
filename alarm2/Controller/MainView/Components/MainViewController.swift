@@ -18,6 +18,7 @@ class MainViewController: UIViewController {
     var alarms: Results<alarm>!
     var alarmArray: [alarm] = []
     var deleteArrayCell: alarm?
+    var userMessage: String = ""
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -26,14 +27,7 @@ class MainViewController: UIViewController {
         setUI()
         loadAlarms()
     }
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(true)
-//        tView.reloadData()
-//    }
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(true)
-//        tView.reloadData()
-//    }
+
     // MARK: - UI Setting
     
     func setUI() {
@@ -44,6 +38,7 @@ class MainViewController: UIViewController {
         tView.register(UINib(nibName: "clockTableViewCell", bundle: nil), forCellReuseIdentifier: clockTableViewCell.identifie)
         tView.dataSource = self
         tView.delegate = self
+        
     }
     func loadAlarms() {
         let realm = try! Realm()
@@ -57,7 +52,7 @@ class MainViewController: UIViewController {
         self.title = "鬧鐘"
         let saveButton = UIBarButtonItem(title: "+", style: .plain , target: self, action: #selector(alarmAdd))
         navigationItem.rightBarButtonItem = saveButton
-        let editButton = UIBarButtonItem(title: "編輯", style: .plain , target: self, action: #selector(alarmAdd))
+        let editButton = UIBarButtonItem(title: "編輯", style: .plain , target: self, action: #selector(alarmEdit))
         navigationItem.leftBarButtonItem = editButton
     }
     // MARK: - IBAction
@@ -65,9 +60,13 @@ class MainViewController: UIViewController {
     @objc func alarmAdd() {
         let alarmAddVC = alarmAddVC()
         //把跳轉過去的畫面設定為主畫面．這樣才可以使用接下來的跳轉畫面
+        alarmAddVC.delegate = self
         let navigationController = UINavigationController(rootViewController: alarmAddVC)
         self.present(navigationController, animated: true)
      }
+    @objc func alarmEdit() {
+        
+    }
     // MARK: - Function
     func formatDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -78,7 +77,6 @@ class MainViewController: UIViewController {
     func didSendMessage(_ message: String) {
             // 在此處處理接收到的訊息
             print("接收到的訊息: \(message)")
-            
             // 刷新表格視圖
             alarmArray.forEach { $0.message = message }
             tView.reloadData()
@@ -96,7 +94,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
             }
         return cell
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 110
     }
@@ -126,23 +123,46 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
             }
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
-
     }
-}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectAlarm = alarmArray[indexPath.row]
+        let alarmAddVC = alarmAddVC()
+        
+        alarmAddVC.editingAlarm = selectAlarm
+        alarmAddVC.isEditMode = true
+               
+               // 設置代理
+        alarmAddVC.delegate = self
+               
+               // 使用導航控制器呈現 alarmAddVC
+        let navigationController = UINavigationController(rootViewController: alarmAddVC)
+        self.present(navigationController, animated: true)
+        }
+    }
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//            switch section {
+//            case 0:
+//                return "🛏睡眠｜起床鬧鐘"
+//            case 1:
+//                return "其他"
+//            default:
+//                return ""
+//            }
+//        }
 // MainViewController.swift
 extension MainViewController: sendDateToDelgate {
     func sendDate(selecteDate selectedDayNames: String) {
         // 實現這個方法
     }
 }
-
-// alarmAddVC.swift
-//extension MainViewController: MessageDelegate {
-//    func didSendMessage(_ message: String) {
-//        // 在此處處理接收到的訊息
-//        userMessage = message
-//
-//        // 刷新表格視圖
-//        alarmSetView.reloadData()
-//    }
-//}
+extension MainViewController: MessageDelegateFromAlarmaddVC {
+    func didSendMessageFromAlarmaddVC(_ message: String) {
+        // 在此處處理接收到的訊息
+        userMessage = message
+        print(userMessage)
+        print(123)
+        // 刷新表格視圖
+        //tView.reloadData()
+        loadAlarms()
+    }
+}

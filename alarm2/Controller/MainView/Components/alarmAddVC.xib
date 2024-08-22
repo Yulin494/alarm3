@@ -11,8 +11,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="alarmAddVC" customModule="alarm2" customModuleProvider="target">
             <connections>
                 <outlet property="alarmSetView" destination="Gi8-yS-yie" id="Wci-Kd-BbI"/>
-                <outlet property="cancelButton" destination="nla-hn-x78" id="4AX-KV-sw2"/>
                 <outlet property="datePicker" destination="R9L-96-QI6" id="64r-ZZ-T3Y"/>
+                <outlet property="delteButton" destination="PUY-ki-oKv" id="SeQ-pn-82b"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,24 +21,6 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="caF-ZZ-rvC">
-                    <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <items>
-                        <navigationItem title="加入鬧鐘" id="vKh-Wi-aFM">
-                            <barButtonItem key="leftBarButtonItem" title="取消" id="nla-hn-x78">
-                                <connections>
-                                    <action selector="cancelButton:" destination="-1" id="0zl-1x-hpn"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem key="rightBarButtonItem" title="儲存" id="eI4-Hl-b1p">
-                                <connections>
-                                    <action selector="saveButton:" destination="-1" id="EmW-ON-mFs"/>
-                                </connections>
-                            </barButtonItem>
-                        </navigationItem>
-                    </items>
-                </navigationBar>
                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="R9L-96-QI6">
                     <rect key="frame" x="0.0" y="145.5" width="414" height="162"/>
                     <locale key="locale" localeIdentifier="zh_TW"/>
@@ -47,6 +29,25 @@
                     <rect key="frame" x="20.5" y="315" width="373" height="292.5"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PUY-ki-oKv">
+                    <rect key="frame" x="20.5" y="647.5" width="373" height="31"/>
+                    <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="刪除鬧鐘">
+                        <color key="titleColor" systemColor="systemRedColor"/>
+                    </state>
+                    <buttonConfiguration key="configuration" style="plain" title="刪除鬧鐘">
+                        <color key="baseForegroundColor" systemColor="systemRedColor"/>
+                    </buttonConfiguration>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="16"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="delete:" destination="-1" eventType="touchUpInside" id="CjJ-8f-gWN"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -55,6 +56,9 @@
                 <constraint firstItem="Gi8-yS-yie" firstAttribute="width" secondItem="R9L-96-QI6" secondAttribute="width" multiplier="0.9" id="EBB-XB-xbu"/>
                 <constraint firstItem="R9L-96-QI6" firstAttribute="height" secondItem="fnl-2z-Ty3" secondAttribute="height" multiplier="0.198044" id="Grl-5M-YJP"/>
                 <constraint firstItem="R9L-96-QI6" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="JJV-ce-3UD"/>
+                <constraint firstItem="PUY-ki-oKv" firstAttribute="centerX" secondItem="Gi8-yS-yie" secondAttribute="centerX" id="Qbf-eC-N7X"/>
+                <constraint firstItem="PUY-ki-oKv" firstAttribute="width" secondItem="Gi8-yS-yie" secondAttribute="width" id="ccp-m8-Mvv"/>
+                <constraint firstItem="PUY-ki-oKv" firstAttribute="top" secondItem="Gi8-yS-yie" secondAttribute="bottom" constant="40" id="drN-do-FPS"/>
                 <constraint firstItem="Gi8-yS-yie" firstAttribute="centerX" secondItem="R9L-96-QI6" secondAttribute="centerX" id="g0y-Id-mPs"/>
                 <constraint firstItem="Gi8-yS-yie" firstAttribute="height" secondItem="R9L-96-QI6" secondAttribute="height" multiplier="1.8" constant="1" id="hUe-nt-GWm"/>
                 <constraint firstItem="Gi8-yS-yie" firstAttribute="top" secondItem="R9L-96-QI6" secondAttribute="bottom" constant="7.5" id="j5h-X5-8L0"/>
@@ -64,8 +68,14 @@
         </view>
     </objects>
     <resources>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
