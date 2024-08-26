@@ -11,7 +11,7 @@ import RealmSwift
 class MainViewController: UIViewController {
     // MARk: - IBOutlet
     @IBOutlet var tView: UITableView!
-//    @IBOutlet var alarmAdd: UIBarButtonItem!
+    //    @IBOutlet var alarmAdd: UIBarButtonItem!
     
     // MARK: - Proprtty
     // 儲存從 Realm 查詢的鬧鐘資料
@@ -19,6 +19,7 @@ class MainViewController: UIViewController {
     var alarmArray: [alarm] = []
     var deleteArrayCell: alarm?
     var userMessage: String = ""
+    var isEditingMode: Bool = false
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -27,7 +28,7 @@ class MainViewController: UIViewController {
         setUI()
         loadAlarms()
     }
-
+    
     // MARK: - UI Setting
     
     func setUI() {
@@ -50,7 +51,7 @@ class MainViewController: UIViewController {
             print("Failed to initialize Realm: \(error.localizedDescription)")
         }
     }
-
+    
     func setupNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
@@ -68,9 +69,12 @@ class MainViewController: UIViewController {
         alarmAddVC.delegate = self
         let navigationController = UINavigationController(rootViewController: alarmAddVC)
         self.present(navigationController, animated: true)
-     }
+    }
     @objc func alarmEdit() {
-        
+        //toggle切換布林值
+        isEditingMode.toggle()
+        tView.setEditing(isEditingMode, animated: true)
+        navigationItem.leftBarButtonItem?.title = isEditingMode ? "完成" : "編輯"
     }
     // MARK: - Function
     func formatDate(_ date: Date) -> String {
@@ -80,21 +84,21 @@ class MainViewController: UIViewController {
         return dateFormatter.string(from: date)
     }
     func didSendMessage(_ message: String) {
-            // 在此處處理接收到的訊息
-            print("接收到的訊息: \(message)")
-            // 刷新表格視圖
-            alarmArray.forEach { $0.message = message }
-            tView.reloadData()
+        // 在此處處理接收到的訊息
+        print("接收到的訊息: \(message)")
+        // 刷新表格視圖
+        alarmArray.forEach { $0.message = message }
+        tView.reloadData()
     }
-//    func formatAlarmTime(alarm: alarm) -> String {
-//        return "\(alarm.morning) \(alarm.time)"
-//    }
-
+    //    func formatAlarmTime(alarm: alarm) -> String {
+    //        return "\(alarm.morning) \(alarm.time)"
+    //    }
+    
 }
 // MARK: - Extensions
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       let cell = tView.dequeueReusableCell(withIdentifier: clockTableViewCell.identifie, for: indexPath) as! clockTableViewCell
+        let cell = tView.dequeueReusableCell(withIdentifier: clockTableViewCell.identifie, for: indexPath) as! clockTableViewCell
         if indexPath.row < alarmArray.count {
             let alarm = alarmArray[indexPath.row]
             let dateFormatter = DateFormatter()
@@ -104,7 +108,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
             cell.setTime.text = dateFormatter.string(from: alarm.time)
             cell.repeatDayAndMessage.text = alarm.repeaT
             //cell.repetitionLabel.text = alarm.repeaT
-            }
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -124,9 +128,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
                     try realm.write {
                         realm.delete(deleteArrayCell)
                     }
-                self.alarmArray.remove(at: indexPath.row)
-                self.tView.deleteRows(at: [indexPath], with: .automatic)
-                completionHandler(true)
+                    self.alarmArray.remove(at: indexPath.row)
+                    self.tView.deleteRows(at: [indexPath], with: .automatic)
+                    completionHandler(true)
                 }catch {
                     print("刪除鬧鐘時發生錯誤：\(error)")
                     completionHandler(false)
@@ -143,15 +147,19 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         
         alarmAddVC.editingAlarm = selectAlarm
         alarmAddVC.isEditMode = true
-               
-               // 設置代理
+        
+        // 設置代理
         alarmAddVC.delegate = self
-               
-               // 使用導航控制器呈現 alarmAddVC
+        
+        // 使用導航控制器呈現 alarmAddVC
         let navigationController = UINavigationController(rootViewController: alarmAddVC)
         self.present(navigationController, animated: true)
-        }
     }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+}
+
 //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 //            switch section {
 //            case 0:
@@ -182,6 +190,7 @@ extension MainViewController: MessageDelegateFromAlarmaddVC {
         if let index = alarmArray.firstIndex(where: { $0.uuid == alarm.uuid }) {
             alarmArray.remove(at: index)
             tView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+            tView.reloadData()
         }
     }
 }
