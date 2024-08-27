@@ -28,6 +28,10 @@ class MainViewController: UIViewController {
         setUI()
         loadAlarms()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadAlarms()
+    }
     
     // MARK: - UI Setting
     
@@ -106,8 +110,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
             dateFormatter.dateFormat = " h:mm"
             cell.morning.text = alarm.morning
             cell.setTime.text = dateFormatter.string(from: alarm.time)
-            cell.repeatDayAndMessage.text = alarm.repeaT
-            //cell.repetitionLabel.text = alarm.repeaT
+            if alarm.repeaT == "永不" {
+                cell.repeatDayAndMessage.text = "\(alarm.message)"
+            } else {
+                cell.repeatDayAndMessage.text = "\(alarm.message) ， \(alarm.repeaT)"
+            }
         }
         return cell
     }

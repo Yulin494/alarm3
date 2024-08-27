@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         }
                     }
                 )
-                
+                    
                 // 設置 Realm 的配置
                 Realm.Configuration.defaultConfiguration = config
                 return true

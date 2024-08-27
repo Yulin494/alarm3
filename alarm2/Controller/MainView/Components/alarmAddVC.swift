@@ -38,10 +38,13 @@ class alarmAddVC: UIViewController {
     private var initialVoiceSelect: String = ""
     let switchControl = UISwitch()
     var userMessage: String = ""
-    var messageTitle: String = "鬧鐘 >"
+    var messageTitle: String = "鬧鐘 "
     var delegate: MessageDelegateFromAlarmaddVC?
     var editingAlarm: alarm?
     var isEditMode: Bool = false
+    let defaultRepeat = "永不"
+    let defaultMessage = "鬧鐘"
+    let defaultVoicd = "A"
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -54,8 +57,7 @@ class alarmAddVC: UIViewController {
         if isEditMode {
             configureForEditing()
         } else {
-            self.title = "新增鬧鐘"
-            deleteButton.isHidden = true
+            NewAlarm()
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -114,75 +116,41 @@ class alarmAddVC: UIViewController {
         } else if selectedDayIndices == [0, 1, 2, 3, 4, 5, 6] { // 每天
             repeatDay = "每天"
         } else if selectedDayIndices == [] { // 每天
-            repeatDay = "從不"
+            repeatDay = "永不"
         } else {
             repeatDay = selectedDayNames.joined(separator: ", ")
         }
         
         
-        let newAlarm = alarm(morning: period, time: selectedDate, repeaT: repeatDay,
-                             message: messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
-        )
-        print(period)
-        print(formattedTime)
-        print(repeatDay)
-        print(messageTitle)
-        print("fileURL : \(realm.configuration.fileURL!)")
-        
+//        print(period)
+//        print(formattedTime)
+//        print(repeatDay)
+//        print(messageTitle)
+//        print("fileURL : \(realm.configuration.fileURL!)")
         do {
             try realm.write {
                 if isEditMode, let alarmToEdit = editingAlarm {
                     alarmToEdit.morning = period
                     alarmToEdit.time = selectedDate
                     alarmToEdit.repeaT = repeatDay
-                    alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
+                    alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 " : messageTitle
                 } else {
+                    let newAlarm = alarm(morning: period,
+                                         time: selectedDate,
+                                         repeaT: repeatDay,
+                                         message: messageTitle.isEmpty ? "鬧鐘 " : messageTitle)
                     realm.add(newAlarm)
                 }
             }
         } catch {
             print("儲存鬧鐘時發生錯誤：\(error)")
         }
-        if !isEditMode {
-            alarmArray.append(newAlarm)
-        }
         
         // 調用 delegate 傳值
         self.delegate?.didSendMessageFromAlarmaddVC(self.messageTitle)
         self.dismiss(animated: true, completion: nil)
     }
-    // Save the alarm to Realm
-    //        try! realm.write {
-    //            realm.add(newAlarm)
-    //        }
-    //
-    //        // Update the alarmArray if needed
-    //        self.alarmArray.append(newAlarm)
-    //
-    //        //delegate.sendDate(selectedDayNames: "selectedDayNames")
-    //        self.dismiss(animated: true, completion: nil)
-    //        //調用delegate傳值
-    //        self.delegate?.didSendMessageFromAlarmaddVC(self.messageTitle)
-    //        initialDaySelect = dayValue.shared.select
-    //        voiceValue.shared.select = initialVoiceSelect
-    //        if isEditMode, let alarmToEdit = editingAlarm {
-    //                try! realm.write {
-    //                    alarmToEdit.time = formattedDate
-    //                    alarmToEdit.repeaT = repeatDay
-    //                    alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
-    //                }
-    //            } else {
-    //                let newAlarm = alarm()
-    //                newAlarm.uuid = UUID().uuidString
-    //                newAlarm.time = formattedDate
-    //                newAlarm.repeaT = repeatDay
-    //                newAlarm.message = messageTitle.isEmpty ? "鬧鐘 >" : messageTitle
-    //
-    //                try! realm.write {
-    //                    realm.add(newAlarm)
-    //                }
-    //            }
-    //    }
+    
     @IBAction func deleteBTN(_ sender: Any) {
         guard let alarmToDelete = editingAlarm else { return }
         
@@ -209,17 +177,31 @@ class alarmAddVC: UIViewController {
     
     
     // MARK: - Function
+    func NewAlarm() {
+        self.title = "新增鬧鐘"
+        deleteButton.isHidden = true
+        dayValue.shared.select = []  // 重複設為 "從不"
+        messageTitle = defaultMessage
+        voiceValue.shared.select = defaultVoicd
+        
+        // 更新 UI
+        reloadUI()
+        
+    }
     func configureForEditing() {
         guard let alarm = editingAlarm else { return }
         // 設置 UI 元素的初始值
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        let formattedTime = dateFormatter.string(from: alarm.time)
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "HH:mm"
+        //let formattedTime = dateFormatter.string(from: alarm.time)
+        
         datePicker.date = alarm.time
         messageTitle = alarm.message
         dayValue.shared.select = getDayIndices(from: alarm.repeaT)
+        
         self.title = "編輯鬧鐘"
         deleteButton.isHidden = false
+        reloadUI()
     }
     func getDayIndices(from repeatString: String) -> [Int] {
         switch repeatString {
@@ -229,11 +211,14 @@ class alarmAddVC: UIViewController {
             return [0, 6]
         case "每天":
             return [0, 1, 2, 3, 4, 5, 6]
-        case "從不":
+        case "永不":
             return []
         default:
             return dayNames.indices.filter { dayNames[$0] == repeatString }
         }
+    }
+    func reloadUI() {
+        alarmSetView.reloadData()
     }
 }
 // MARK: - Extensions
@@ -244,39 +229,31 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = alarmSetView.dequeueReusableCell(withIdentifier: alarmAddTableViewCell.identifie, for: indexPath) as! alarmAddTableViewCell
         cell.alarmSetLabel.text = info[indexPath.row]
-        if info[indexPath.row] == "重複" {
-            let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
-            var title = selectedDayNames.isEmpty ? "從不" : selectedDayNames.joined(separator: ", ")
-            if selectedDayNames == [ "星期一" , "星期二" , "星期三" , "星期四" , "星期五" ] {
-                title = "平日 >"
-                cell.pickDateLabel.text = title
-            } else if selectedDayNames == ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"] {
-                title = "每天 >"
-                cell.pickDateLabel.text = title
-            } else if selectedDayNames == ["星期天","星期六"] {
-                title = "週末 >"
-                cell.pickDateLabel.text = title
-            } else if selectedDayNames == [] {
-                title = "從不 >"
-                cell.pickDateLabel.text = title
-            } else {
-                cell.pickDateLabel.text = title
+        switch info[indexPath.row] {
+            case "重複":
+                let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
+                var title = selectedDayNames.isEmpty ? "永不" : selectedDayNames.joined(separator: ", ")
+                if selectedDayNames == ["星期一", "星期二", "星期三", "星期四", "星期五"] {
+                    title = "平日 "
+                } else if selectedDayNames == dayNames {
+                    title = "每天 "
+                } else if selectedDayNames == ["星期天", "星期六"] {
+                    title = "週末 "
+                } else if selectedDayNames == [""] {
+                    title = "永不 "
+                }
+                cell.pickDateLabel.text = "\(title) >"
+            case "標籤":
+                cell.pickDateLabel.text = "\(messageTitle) >"
+            case "提示聲":
+                cell.pickDateLabel.text = "\(voiceValue.shared.select) >"
+            case "稍後提醒":
+                // 處理稍後提醒的邏輯
+                break
+            default:
+                cell.pickDateLabel.text = ""
             }
-            
-        } else if info[indexPath.row] == "提示聲" {
-            let selectedVoiceNames = voiceValue.shared.select
-            var title = selectedVoiceNames
-            cell.pickDateLabel.text = title
-        } else if info[indexPath.row] == "稍後提醒" {
-            //view.addSubview(switchControl)
-            //switchControl.frame = CGRect(x: 200, y: 200, width: 0, height: 0)
-        } else if info[indexPath.row] == "標籤" {
-            messageTitle = userMessage.isEmpty ? "鬧鐘 >" : userMessage
-            cell.pickDateLabel.text = messageTitle
-        } else {
-            cell.pickDateLabel.text = ""
-        }
-        return cell
+            return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -317,11 +294,11 @@ extension alarmAddVC: RepeatVCDelegate {
 extension alarmAddVC: MessageDelegate {
     func didSendMessage(_ message: String) {
         // 在此處處理接收到的訊息
-        userMessage = message
+        messageTitle = message
         print(userMessage)
         print(messageTitle)
         // 刷新表格視圖
-        alarmSetView.reloadData()
+        reloadUI()
     }
 }
 protocol MessageDelegateFromAlarmaddVC {
