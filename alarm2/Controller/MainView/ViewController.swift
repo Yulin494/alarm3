@@ -13,13 +13,15 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         self.delegate = self
         let testVC = MainViewController()
+        let alarmVC = MainViewController()
+        
         let testController1 = UINavigationController(rootViewController: testVC)
         
         testController1.tabBarItem.image = UIImage(systemName: "globe")
         testController1.tabBarItem.title = "世界時鐘"
         
         
-        let testController2 = UINavigationController(rootViewController: testVC)
+        let testController2 = UINavigationController(rootViewController: alarmVC)
         
         testController2.tabBarItem.image = UIImage(systemName: "alarm")
         testController2.tabBarItem.title = "鬧鐘"
@@ -41,7 +43,7 @@ class ViewController: UITabBarController, UITabBarControllerDelegate {
         tabBar.tintColor = .blue
         tabBar.barTintColor = .white // 設置 tab bar 的背景顏色
         tabBar.unselectedItemTintColor = .gray // 設置未選中項目的顏色
-
+        self.selectedIndex = 1
     }
         
 

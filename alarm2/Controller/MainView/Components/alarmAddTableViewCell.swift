@@ -10,6 +10,7 @@ import UIKit
 class alarmAddTableViewCell: UITableViewCell {
     @IBOutlet var alarmSetLabel: UILabel!
     @IBOutlet var pickDateLabel: UILabel!
+    @IBOutlet var remindSwithch: UISwitch!
     static let identifie = "alarmAddTableViewCell"
     override func awakeFromNib() {
         super.awakeFromNib()

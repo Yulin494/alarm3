@@ -28,9 +28,9 @@ class alarmAddVC: UIViewController {
     @IBOutlet var deleteButton: UIButton!
     
     // MARK: - Proprtty
-    var alarmArray: [alarm] = []
+    var alarmArray: [alarm2] = []
     // var delegate: sendDateToDelgate!
-    var alarms: Results<alarm>!
+    var alarms: Results<alarm2>!
     var info = ["重複","標籤","提示聲","稍後提醒"]
     var dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
     var daysNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"]
@@ -40,11 +40,12 @@ class alarmAddVC: UIViewController {
     var userMessage: String = ""
     var messageTitle: String = "鬧鐘 "
     var delegate: MessageDelegateFromAlarmaddVC?
-    var editingAlarm: alarm?
+    var editingAlarm: alarm2?
     var isEditMode: Bool = false
     let defaultRepeat = "永不"
     let defaultMessage = "鬧鐘"
     let defaultVoicd = "A"
+    var reminder: Bool = true
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -126,7 +127,7 @@ class alarmAddVC: UIViewController {
 //        print(formattedTime)
 //        print(repeatDay)
 //        print(messageTitle)
-//        print("fileURL : \(realm.configuration.fileURL!)")
+        print("fileURL : \(realm.configuration.fileURL!)")
         do {
             try realm.write {
                 if isEditMode, let alarmToEdit = editingAlarm {
@@ -134,11 +135,13 @@ class alarmAddVC: UIViewController {
                     alarmToEdit.time = selectedDate
                     alarmToEdit.repeaT = repeatDay
                     alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 " : messageTitle
+                    alarmToEdit.reminder = reminder
                 } else {
-                    let newAlarm = alarm(morning: period,
+                    let newAlarm = alarm2(morning: period,
                                          time: selectedDate,
                                          repeaT: repeatDay,
-                                         message: messageTitle.isEmpty ? "鬧鐘 " : messageTitle)
+                                         message: messageTitle.isEmpty ? "鬧鐘 " : messageTitle,
+                                         reminder: reminder )
                     realm.add(newAlarm)
                 }
             }
@@ -198,7 +201,7 @@ class alarmAddVC: UIViewController {
         datePicker.date = alarm.time
         messageTitle = alarm.message
         dayValue.shared.select = getDayIndices(from: alarm.repeaT)
-        
+        reminder = alarm.reminder
         self.title = "編輯鬧鐘"
         deleteButton.isHidden = false
         reloadUI()
@@ -220,6 +223,9 @@ class alarmAddVC: UIViewController {
     func reloadUI() {
         alarmSetView.reloadData()
     }
+    @objc func switchChanged(_ sender: UISwitch) {
+        reminder = sender.isOn
+    }
 }
 // MARK: - Extensions
 @objc protocol sendDateToDelgate {
@@ -229,31 +235,42 @@ extension alarmAddVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = alarmSetView.dequeueReusableCell(withIdentifier: alarmAddTableViewCell.identifie, for: indexPath) as! alarmAddTableViewCell
         cell.alarmSetLabel.text = info[indexPath.row]
+        //內建的符號
+        cell.accessoryType = .disclosureIndicator
+        cell.backgroundColor = UIColor.systemGray
         switch info[indexPath.row] {
-            case "重複":
-                let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
-                var title = selectedDayNames.isEmpty ? "永不" : selectedDayNames.joined(separator: ", ")
-                if selectedDayNames == ["星期一", "星期二", "星期三", "星期四", "星期五"] {
-                    title = "平日 "
-                } else if selectedDayNames == dayNames {
-                    title = "每天 "
-                } else if selectedDayNames == ["星期天", "星期六"] {
-                    title = "週末 "
-                } else if selectedDayNames == [""] {
-                    title = "永不 "
-                }
-                cell.pickDateLabel.text = "\(title) >"
-            case "標籤":
-                cell.pickDateLabel.text = "\(messageTitle) >"
-            case "提示聲":
-                cell.pickDateLabel.text = "\(voiceValue.shared.select) >"
-            case "稍後提醒":
-                // 處理稍後提醒的邏輯
-                break
-            default:
-                cell.pickDateLabel.text = ""
+        case "重複":
+            let selectedDayNames = dayValue.shared.select.map { dayNames[$0] }
+            var title = selectedDayNames.isEmpty ? "永不" : selectedDayNames.joined(separator: ", ")
+            if selectedDayNames == ["星期一", "星期二", "星期三", "星期四", "星期五"] {
+                title = "平日 "
+            } else if selectedDayNames == dayNames {
+                title = "每天 "
+            } else if selectedDayNames == ["星期天", "星期六"] {
+                title = "週末 "
+            } else if selectedDayNames == [""] {
+                title = "永不 "
             }
-            return cell
+            cell.pickDateLabel.text = "\(title)"
+            cell.remindSwithch.isHidden = true
+        case "標籤":
+            cell.pickDateLabel.text = "\(messageTitle)"
+            cell.remindSwithch.isHidden = true
+        case "提示聲":
+            cell.pickDateLabel.text = "\(voiceValue.shared.select)"
+            cell.remindSwithch.isHidden = true
+        case "稍後提醒":
+            cell.pickDateLabel.text = ""
+            cell.remindSwithch.isHidden = false
+            cell.remindSwithch.isOn = reminder
+            cell.remindSwithch.tag = indexPath.row
+            cell.remindSwithch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+            cell.accessoryType = UITableViewCell.AccessoryType.none
+        default:
+            cell.pickDateLabel.text = ""
+            cell.remindSwithch.isHidden = true
+        }
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -303,5 +320,5 @@ extension alarmAddVC: MessageDelegate {
 }
 protocol MessageDelegateFromAlarmaddVC {
     func didSendMessageFromAlarmaddVC(_ message: String)
-    func didDeleteAlarm(_ alarm: alarm)
+    func didDeleteAlarm(_ alarm: alarm2)
 }

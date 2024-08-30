@@ -9,6 +9,7 @@ import UIKit
 
 class clockTableViewCell: UITableViewCell {
 
+    @IBOutlet var OnOffSwitch: UISwitch!
     @IBOutlet var morning: UILabel!
     @IBOutlet var setTime: UILabel!
     @IBOutlet var repeatDayAndMessage: UILabel!
@@ -16,6 +17,7 @@ class clockTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        //OnOffSwitch.addTarget(self, action: #selector(), for: <#T##UIControl.Event#>)
         // Initialization code
     }
 
@@ -24,5 +26,13 @@ class clockTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    func updateCellAppearance() {
+            let isOn = OnOffSwitch.isOn
+            let color: UIColor = isOn ? .black : .gray
+            
+            repeatDayAndMessage.textColor = color
+            morning.textColor = color
+            setTime.textColor = color
+        }
     
 }

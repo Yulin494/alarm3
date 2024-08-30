@@ -58,6 +58,7 @@
                 <constraint firstItem="nrg-iY-7C1" firstAttribute="width" secondItem="njF-e1-oar" secondAttribute="width" multiplier="0.497512" id="sOh-Ym-cy5"/>
             </constraints>
             <connections>
+                <outlet property="OnOffSwitch" destination="PhO-zW-GkG" id="gk0-IF-tWI"/>
                 <outlet property="morning" destination="SzU-aq-wZ0" id="80l-rg-qUR"/>
                 <outlet property="repeatDayAndMessage" destination="mhA-te-MM6" id="5EI-kF-zlU"/>
                 <outlet property="setTime" destination="nrg-iY-7C1" id="yjO-iO-Iq4"/>
