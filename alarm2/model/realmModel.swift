@@ -9,14 +9,16 @@ import Foundation
 import RealmSwift
 import UIKit
 
-class alarm2: Object {
+class alarm3: Object {
     //自動生成ＵＵＩＤ
-    @objc dynamic var uuid: String = UUID().uuidString
-    @objc dynamic var morning: String = ""
-    @objc dynamic var time: Date = Date()
-    @objc dynamic var repeaT: String = ""
-    @objc dynamic var message: String = ""
-    @objc dynamic var reminder: Bool = false
+    @Persisted var uuid: String = UUID().uuidString
+    @Persisted var morning: String = ""
+    @Persisted var time: Date = Date()
+    @Persisted var repeaT: String = ""
+    @Persisted var message: String = ""
+    @Persisted var reminder: Bool = false
+    @Persisted var isEnabled: Bool = true  // 新增的屬性
+
     //設定索引主題
     override static func primaryKey() -> String? {
         return "uuid"

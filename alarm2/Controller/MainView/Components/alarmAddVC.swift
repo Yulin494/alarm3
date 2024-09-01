@@ -28,9 +28,9 @@ class alarmAddVC: UIViewController {
     @IBOutlet var deleteButton: UIButton!
     
     // MARK: - Proprtty
-    var alarmArray: [alarm2] = []
+    var alarmArray: [alarm3] = []
     // var delegate: sendDateToDelgate!
-    var alarms: Results<alarm2>!
+    var alarms: Results<alarm3>!
     var info = ["重複","標籤","提示聲","稍後提醒"]
     var dayNames = ["星期天" , "星期一" , "星期二" , "星期三" , "星期四" , "星期五" , "星期六"]
     var daysNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"]
@@ -40,7 +40,7 @@ class alarmAddVC: UIViewController {
     var userMessage: String = ""
     var messageTitle: String = "鬧鐘 "
     var delegate: MessageDelegateFromAlarmaddVC?
-    var editingAlarm: alarm2?
+    var editingAlarm: alarm3?
     var isEditMode: Bool = false
     let defaultRepeat = "永不"
     let defaultMessage = "鬧鐘"
@@ -137,7 +137,7 @@ class alarmAddVC: UIViewController {
                     alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 " : messageTitle
                     alarmToEdit.reminder = reminder
                 } else {
-                    let newAlarm = alarm2(morning: period,
+                    let newAlarm = alarm3(morning: period,
                                          time: selectedDate,
                                          repeaT: repeatDay,
                                          message: messageTitle.isEmpty ? "鬧鐘 " : messageTitle,
@@ -320,5 +320,5 @@ extension alarmAddVC: MessageDelegate {
 }
 protocol MessageDelegateFromAlarmaddVC {
     func didSendMessageFromAlarmaddVC(_ message: String)
-    func didDeleteAlarm(_ alarm: alarm2)
+    func didDeleteAlarm(_ alarm: alarm3)
 }

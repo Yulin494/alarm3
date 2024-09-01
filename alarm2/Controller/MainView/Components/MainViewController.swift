@@ -16,9 +16,9 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     // MARK: - Proprtty
     // 儲存從 Realm 查詢的鬧鐘資料
-    var alarms: Results<alarm2>!
-    var alarmArray: [alarm2] = []
-    var deleteArrayCell: alarm2?
+    var alarms: Results<alarm3>!
+    var alarmArray: [alarm3] = []
+    var deleteArrayCell: alarm3?
     var userMessage: String = ""
     var isEditingMode: Bool = false
     // MARK: - LifeCycle
@@ -27,15 +27,9 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         super.viewDidLoad()
         setUI()
         loadAlarms()
-        createNotificationContent()
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.carPlay,.sound]) { (granted, error) in
-            if granted {
-                print("允許開啟")
-            }else{
-                print("拒絕接受開啟")
-            }
-        }
-        UNUserNotificationCenter.current().delegate = self
+        //createNotificationContent()
+        setUpNotificationContent()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -56,7 +50,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     func loadAlarms() {
         do {
             let realm = try Realm()
-            let alarms = realm.objects(alarm2.self).sorted(byKeyPath: "time", ascending: true)
+            let alarms = realm.objects(alarm3.self).sorted(byKeyPath: "time", ascending: true)
             alarmArray = Array(alarms)
             tView.reloadData()
         } catch {
@@ -109,7 +103,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     //    func formatAlarmTime(alarm: alarm) -> String {
     //        return "\(alarm.morning) \(alarm.time)"
     //    }
-    func createNotificationContent () {
+    func createNotificationContent (for alarm: alarm3) {
         let content = UNMutableNotificationContent()    //建立內容透過指派content來取得UNMutableNotificationContent功能
         content.title = "起床起床"               //推播標題
         content.subtitle = "快起床"            //推播副標題
@@ -117,9 +111,58 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
         content.badge = 1                  //app的icon右上角跳出的紅色數字數量 line 999的那個
         content.sound = UNNotificationSound.defaultCritical     //推播的聲音
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification", content: content, trigger: trigger)
+        let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: alarm.time)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    func setUpNotificationContent() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.carPlay,.sound]) { (granted, error) in
+            if granted {
+                print("允許開啟")
+            }else{
+                print("拒絕接受開啟")
+            }
+        }
+        //UNUserNotificationCenter.current().delegate = self
+    }
+    @objc func switchChanged(_ sender: UISwitch) {
+        let index = sender.tag
+        guard index < alarmArray.count else { return }
+        
+        let alarm = alarmArray[index]
+        do {
+            let realm = try Realm()
+            try realm.write {
+                alarm.isEnabled = sender.isOn
+            }
+            
+            if sender.isOn {
+                createNotificationContent(for: alarm)
+            } else {
+                cancelNotification(for: alarm)
+            }
+            
+            if let cell = tView.cellForRow(at: IndexPath(row: index, section: 0)) as? clockTableViewCell {
+                updateCellAppearance(cell, isEnabled: sender.isOn)
+            }
+        } catch {
+            print("更新鬧鐘狀態時發生錯誤：\(error)")
+        }
+    }
+    
+    func updateCellAppearance(_ cell: clockTableViewCell, isEnabled: Bool) {
+        let color: UIColor = isEnabled ? .black : .gray
+        cell.repeatDayAndMessage.textColor = color
+        cell.morning.textColor = color
+        cell.setTime.textColor = color
+    }
+    func cancelNotification(for alarm: alarm3) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [alarm.uuid])
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound])
+        print("通知顯示：\(notification)")
     }
 }
 // MARK: - Extensions
@@ -139,16 +182,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
             } else {
                 cell.repeatDayAndMessage.text = "\(alarm.message) ， \(alarm.repeaT)"
             }
+            cell.OnOffSwitch.isOn = alarm.isEnabled
+            cell.OnOffSwitch.tag = indexPath.row
+            cell.OnOffSwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+            updateCellAppearance(cell, isEnabled: alarm.isEnabled)
             
-            if cell.OnOffSwitch.isOn {
-                cell.repeatDayAndMessage.textColor = .black
-                cell.morning.textColor = .black
-                cell.setTime.textColor = .black
-            } else {
-            cell.repeatDayAndMessage.textColor = .gray
-            cell.morning.textColor = .gray
-            cell.setTime.textColor = .gray
-            }
         }
         return cell
     }
@@ -227,7 +265,7 @@ extension MainViewController: MessageDelegateFromAlarmaddVC {
         // 刷新表格視圖
         loadAlarms()
     }
-    func didDeleteAlarm(_ alarm: alarm2) {
+    func didDeleteAlarm(_ alarm: alarm3) {
         if let index = alarmArray.firstIndex(where: { $0.uuid == alarm.uuid }) {
             alarmArray.remove(at: index)
             tView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)

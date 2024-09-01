@@ -10,7 +10,7 @@ import RealmSwift
 import UserNotifications
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     var window: UIWindow?
     
@@ -23,9 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 // 在這裡可以留空來使用自動遷移
                 if oldSchemaVersion < 1 {
                     // 自動遷移會處理大部分簡單的變更
-                    migration.enumerateObjects(ofType: alarm2.className()) { oldObject, newObject in
+                    migration.enumerateObjects(ofType: alarm3.className()) { oldObject, newObject in
                         // 新屬性的默認值設置為 false
-                        newObject!["reminder"] = false
+                        newObject!["isEnabled"] = true
                     }
                 }
             }
@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         print("不允許")
                     }
         })
-        //UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().delegate = self
 
         // 設置 Realm 的配置
         Realm.Configuration.defaultConfiguration = config
@@ -64,7 +64,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-    
+    //讓桌面app右上角的icon消失
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
     
 }
 
