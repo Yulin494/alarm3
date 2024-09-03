@@ -95,6 +95,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     func didSendMessage(_ message: String) {
         // 在此處處理接收到的訊息
         print("接收到的訊息: \(message)")
+        
         // 刷新表格視圖
         //對集合內的當前元素做更改
         alarmArray.forEach { $0.message = message }
@@ -103,19 +104,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     //    func formatAlarmTime(alarm: alarm) -> String {
     //        return "\(alarm.morning) \(alarm.time)"
     //    }
-    func createNotificationContent (for alarm: alarm3) {
-        let content = UNMutableNotificationContent()    //建立內容透過指派content來取得UNMutableNotificationContent功能
-        content.title = "起床起床"               //推播標題
-        content.subtitle = "快起床"            //推播副標題
-        content.body = "時間到了，快起床"        //推播內文
-        content.badge = 1                  //app的icon右上角跳出的紅色數字數量 line 999的那個
-        content.sound = UNNotificationSound.defaultCritical     //推播的聲音
-        
-        let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: alarm.time)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-    }
+    
     func setUpNotificationContent() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.carPlay,.sound]) { (granted, error) in
             if granted {
@@ -124,7 +113,7 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 print("拒絕接受開啟")
             }
         }
-        //UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().delegate = self
     }
     @objc func switchChanged(_ sender: UISwitch) {
         let index = sender.tag
@@ -137,11 +126,12 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
                 alarm.isEnabled = sender.isOn
             }
             
-            if sender.isOn {
-                createNotificationContent(for: alarm)
-            } else {
-                cancelNotification(for: alarm)
-            }
+                        if sender.isOn {
+                            //createNotificationContent(for: alarm)
+                            print("on")
+                        } else {
+                            cancelNotification(for: alarm)
+                        }
             
             if let cell = tView.cellForRow(at: IndexPath(row: index, section: 0)) as? clockTableViewCell {
                 updateCellAppearance(cell, isEnabled: sender.isOn)

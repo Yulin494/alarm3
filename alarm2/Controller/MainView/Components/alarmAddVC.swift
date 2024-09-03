@@ -8,6 +8,7 @@
 import UIKit
 import RealmSwift
 import AuthenticationServices
+import NotificationCenter
 
 class time {
     var hourSelect: Int?
@@ -136,6 +137,7 @@ class alarmAddVC: UIViewController {
                     alarmToEdit.repeaT = repeatDay
                     alarmToEdit.message = messageTitle.isEmpty ? "鬧鐘 " : messageTitle
                     alarmToEdit.reminder = reminder
+                    createNotificationContent(for: alarmToEdit)
                 } else {
                     let newAlarm = alarm3(morning: period,
                                          time: selectedDate,
@@ -143,12 +145,13 @@ class alarmAddVC: UIViewController {
                                          message: messageTitle.isEmpty ? "鬧鐘 " : messageTitle,
                                          reminder: reminder )
                     realm.add(newAlarm)
+                    createNotificationContent(for: newAlarm)
                 }
             }
         } catch {
             print("儲存鬧鐘時發生錯誤：\(error)")
         }
-        
+                
         // 調用 delegate 傳值
         self.delegate?.didSendMessageFromAlarmaddVC(self.messageTitle)
         self.dismiss(animated: true, completion: nil)
@@ -180,6 +183,20 @@ class alarmAddVC: UIViewController {
     
     
     // MARK: - Function
+    func createNotificationContent (for alarm: alarm3) {
+        let content = UNMutableNotificationContent()    //建立內容透過指派content來取得UNMutableNotificationContent功能
+        content.title = "起床起床"               //推播標題
+        content.subtitle = "快起床"            //推播副標題
+        content.body = "時間到了，快起床"        //推播內文
+        content.badge = 1                  //app的icon右上角跳出的紅色數字數量 line 999的那個
+        content.sound = UNNotificationSound.defaultCritical     //推播的聲音
+        
+        let dateComponents = Calendar.current.dateComponents([.hour, .minute], from: alarm.time)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        print("通知時間：\(dateComponents)")
+    }
     func NewAlarm() {
         self.title = "新增鬧鐘"
         deleteButton.isHidden = true
