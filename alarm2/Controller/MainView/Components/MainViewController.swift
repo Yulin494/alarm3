@@ -149,6 +149,9 @@ class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     func cancelNotification(for alarm: alarm3) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [alarm.uuid])
+//        for index in 0..<7 {
+//            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["\(alarm.creatTime)_\(index)"])
+//        }
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])
@@ -176,8 +179,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
             cell.OnOffSwitch.tag = indexPath.row
             cell.OnOffSwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
             updateCellAppearance(cell, isEnabled: alarm.isEnabled)
-            
+//            if isEditingMode {
+//                cell.OnOffSwitch.isHidden = true
+//            } else {
+//                cell.OnOffSwitch.isHidden = false
+//            }
         }
+        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -194,6 +202,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
                 let deleteArrayCell = self.alarmArray[indexPath.row]
                 let realm = try! Realm()
                 do {
+                    self.cancelNotification(for: deleteArrayCell)
                     try realm.write {
                         realm.delete(deleteArrayCell)
                     }
@@ -227,6 +236,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
